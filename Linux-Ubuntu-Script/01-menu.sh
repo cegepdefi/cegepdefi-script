@@ -68,38 +68,38 @@ do
             fi
         ;;
         "${a1}")
-            echo -e "${Blue}--> bash /script/02-BasicCommand.sh ${NC}";
-            exec bash /script/02-BasicCommand.sh;
+            echo -e "${Blue}--> bash ./02-BasicCommand.sh ${NC}";
+            exec bash ./02-BasicCommand.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         "${a2}")
-            echo -e "${Blue}--> bash /script/03-net.sh ${NC}";
-            exec bash /script/03-net.sh;
+            echo -e "${Blue}--> bash ./03-net.sh ${NC}";
+            exec bash ./03-net.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         "${a3}")
-            echo -e "${Blue}--> bash /script/04-ssh.sh ${NC}";
-            exec bash /script/04-ssh.sh;
+            echo -e "${Blue}--> bash ./04-ssh.sh ${NC}";
+            exec bash ./04-ssh.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         "${a4}")
-            echo -e "${Blue}--> bash /script/05-install.sh ${NC}";
-            exec bash /script/05-install.sh;
+            echo -e "${Blue}--> bash ./05-install.sh ${NC}";
+            exec bash ./05-install.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         "${firewall}")
             echo -e "${Blue}--> 06-fire-wall.sh ${NC}";
-            exec bash /script/06-fire-wall.sh;
+            exec bash ./06-fire-wall.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         "${samba}")
             echo -e "${Blue}--> 07-samba.sh ${NC}";
-            exec bash /script/07-samba.sh;
+            exec bash ./07-samba.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         "${wakeonlan}")
             echo -e "${Blue}--> 08-wakeonlan.sh ${NC}";
-            exec bash /script/08-wakeonlan.sh;
+            exec bash ./08-wakeonlan.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         *) echo "invalid option $REPLY";;

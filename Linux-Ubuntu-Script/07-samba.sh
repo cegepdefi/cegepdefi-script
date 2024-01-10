@@ -49,7 +49,7 @@ do
     case $opt in
         "${MainMenu}")
             echo -e "${Blue}--> 01-menu.sh ${NC}";
-            exec sudo -u root bash /script/01-menu.sh;
+            exec sudo -u root bash ./01-menu.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         "${nettoy}")
