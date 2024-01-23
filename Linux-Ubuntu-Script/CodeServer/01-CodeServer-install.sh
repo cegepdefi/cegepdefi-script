@@ -106,6 +106,15 @@ EOF
 
         echo -e "${Gray}[COMMAND] sudo systemctl start code-server ${NC}"
         sudo systemctl start code-server
+
+        echo -e "${Gray}[INPUT]${NC}${RED} Reboot? (Y/N): ${NC}"
+        read -p "" respuesta
+        # Convertir la respuesta a minúsculas
+        respuesta=$(echo "$respuesta" | tr '[:upper:]' '[:lower:]')
+        if [ "$respuesta" = "y" ]; then
+            echo -e "${Gray}[COMMAND] sudo reboot ${NC}"
+            sudo reboot
+        fi
     fi
 }
 
@@ -138,6 +147,15 @@ function f_edit_vs() {
     if [ "$respuesta" = "y" ]; then
         echo -e "${Gray}[COMMAND] sudo nano /lib/systemd/system/code-server.service ${NC}"
         sudo nano /lib/systemd/system/code-server.service
+
+        echo -e "${Gray}[INPUT]${NC}${RED} Reboot? (Y/N): ${NC}"
+        read -p "" respuesta
+        # Convertir la respuesta a minúsculas
+        respuesta=$(echo "$respuesta" | tr '[:upper:]' '[:lower:]')
+        if [ "$respuesta" = "y" ]; then
+            echo -e "${Gray}[COMMAND] sudo reboot ${NC}"
+            sudo reboot
+        fi
     fi
 }
 
@@ -160,6 +178,7 @@ function f_restart_vs() {
     echo -e "${Orange}--> [restart | Code-Server] <--${NC}"
     echo -e "${Gray}[COMMAND] sudo systemctl restart code-server ${NC}"
     sudo systemctl restart code-server
+    f_reloadDaemon_vs
 }
 
 function f_stop_vs() {
@@ -167,6 +186,7 @@ function f_stop_vs() {
     echo -e "${Orange}--> [stop | Code-Server] <--${NC}"
     echo -e "${Gray}[COMMAND] sudo systemctl stop code-server ${NC}"
     sudo systemctl stop code-server
+    f_reloadDaemon_vs
 }
 
 function f_enable_vs() {
@@ -194,6 +214,14 @@ function f_firewall_vs() {
     sudo ufw reload
 }
 
+function f_reloadDaemon_vs(){
+    # INPUT
+    echo -e "${Orange}--> [systemctl daemon-reload | Code-Server] <--${NC}"
+
+    echo -e "${Gray}[COMMAND] sudo systemctl daemon-reload ${NC}"
+    sudo systemctl daemon-reload
+}
+
 echo -e "${Blue}############################################################${NC}"
 echo -e "${Blue}#                          Menu                            #${NC}"
 echo -e "${Blue}############################################################${NC}"
@@ -208,6 +236,7 @@ edit_vs="Edit config | Code-Server"
 status_vs="Status | Code-Server"
 start_vs="Start | Code-Server"
 restart_vs="Restart | Code-Server"
+reloadDaemon_vs="systemctl daemon-reload | Code-Server"
 stop_vs="Stop | Code-Server"
 enable_vs="Enable | Code-Server"
 disable_vs="Disable | Code-Server"
@@ -218,7 +247,7 @@ options=("${Clear}" "${Exit}"
     "${tuto_link_vs}" "${connectInfo_vs}" "${install_vs}"
     "${defaultBackupFile_vs}" "${edit_vs}"
     "${status_vs}" "${start_vs}"
-    "${restart_vs}" "${stop_vs}"
+    "${restart_vs}" "${reloadDaemon_vs}" "${stop_vs}"
     "${enable_vs}" "${disable_vs}"
     "${firewall_vs}")
 
@@ -254,6 +283,9 @@ select opt in "${options[@]}"; do
         ;;
     "${restart_vs}")
         f_restart_vs
+        ;;
+    "${reloadDaemon_vs}")
+        f_reloadDaemon_vs
         ;;
     "${stop_vs}")
         f_stop_vs
