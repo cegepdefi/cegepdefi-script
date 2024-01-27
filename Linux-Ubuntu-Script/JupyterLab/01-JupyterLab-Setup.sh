@@ -113,7 +113,7 @@ function f_crear_contrasena_jupyterLab() {
     echo -e "${Green}----> [OK] (f_crear_contrasena_jupyterLab) COMPLETED !! <----${NC}"
 }
 
-function f_config_JupyterLab() {
+function f_edit_config_JupyterLab() {
     f_crear_contrasena_jupyterLab
 
     # Generate a password hash
@@ -134,6 +134,10 @@ function f_config_JupyterLab() {
     echo "c.NotebookApp.allow_origin = '*'" >>~/.jupyter/jupyter_lab_config.py
     echo -e "${Gray}[COMMAND] c.NotebookApp.ip = '0.0.0.0' >>~/.jupyter/jupyter_lab_config.py ${NC}"
     echo "c.NotebookApp.ip = '0.0.0.0'" >>~/.jupyter/jupyter_lab_config.py
+}
+
+function f_config_JupyterLab() {
+    f_edit_config_JupyterLab
 
     # Create a new service for JupyterLab
     echo -e "${Gray}#Create a new service for JupyterLab${NC}"
@@ -185,18 +189,19 @@ updates="updates"
 installs_pip_env="installs pip + env"
 install_JupyterLab="install JupyterLab"
 config_JupyterLab="config JupyterLab"
+edit_config_JupyterLab="Edit config JupyterLab"
 JupyterLab_status="JupyterLab status service"
-JupyterLab_service="JupyterLab start service"
+JupyterLab_start="JupyterLab start service"
 JupyterLab_restart="JupyterLab restart service"
-JupyterLab_restart="Show ip"
+JupyterLab_ip="Show ip"
 JupyterLab_connect_info="How to connect to the JupyterLab website"
 
 PS3="#======= Entrer numero option #======= :" # this displays the common prompt
 options=("${Clear}" "${Exit}"
     "${updates}" "${installs_pip_env}"
-    "${install_JupyterLab}" "${config_JupyterLab}"
-    "${JupyterLab_service}" "${JupyterLab_connect_info}"
-    "${JupyterLab_status}" "${JupyterLab_restart}")
+    "${install_JupyterLab}" "${config_JupyterLab}" "${edit_config_JupyterLab}"
+    "${JupyterLab_status}" "${JupyterLab_start}" "${JupyterLab_restart}"
+    "${JupyterLab_ip}" "${JupyterLab_connect_info}")
 
 COLUMNS=12
 select opt in "${options[@]}"; do
@@ -219,17 +224,23 @@ select opt in "${options[@]}"; do
     "${config_JupyterLab}")
         f_config_JupyterLab
         ;;
-    "${JupyterLab_service}")
-        f_JupyterLab_service
-        ;;
-    "${JupyterLab_connect_info}")
-        echo "Enter http://youIP:8888/lab"
+    "${edit_config_JupyterLab}")
+        f_edit_config_JupyterLab
         ;;
     "${JupyterLab_status}")
         f_status
         ;;
+    "${JupyterLab_start}")
+        f_JupyterLab_service
+        ;;
     "${JupyterLab_restart}")
         f_restart
+        ;;
+    "${JupyterLab_ip}")
+        ip add
+        ;;
+    "${JupyterLab_connect_info}")
+        echo "Enter http://youIP:8888/lab"
         ;;
     *) echo "invalid option $REPLY" ;;
     esac
