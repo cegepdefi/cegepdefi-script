@@ -128,19 +128,19 @@ function f_configurar_enrutamiento() {
     done
 
     # INPUT
-    echo -e "${Gray}[INPUT]${NC}${RED} ¿Deseas instalar netfilter-persistent? (S/N): ${NC}"
+    echo -e "${Gray}[INPUT]${NC}${RED} ¿Deseas instalar netfilter-persistent? (Y/N): ${NC}"
     read -p "" respuesta
     respuesta=$(echo "$respuesta" | tr '[:upper:]' '[:lower:]')
-    if [ "$respuesta" == "S" ] || [ "$respuesta" == "s" ]; then
+    if ["$respuesta" == "y"]; then
         sudo apt-get update
         sudo apt-get install iptables-persistent
     fi
 
     # INPUT
-    echo -e "${Gray}[INPUT]${NC}${RED} ¿Deseas configurar el enrutamiento para permitir internet a los clientes? (S/N): ${NC}"
+    echo -e "${Gray}[INPUT]${NC}${RED} ¿Deseas configurar el enrutamiento para permitir internet a los clientes? (Y/N): ${NC}"
     read -p "" respuesta
     respuesta=$(echo "$respuesta" | tr '[:upper:]' '[:lower:]')
-    if [ "$respuesta" == "S" ] || [ "$respuesta" == "s" ]; then
+    if ["$respuesta" == "y"]; then
         echo "Habilitar el reenvío de IP"
         echo "1" >/proc/sys/net/ipv4/ip_forward
         echo
@@ -182,10 +182,10 @@ function f_configurar_dhcp() {
 
     # INPUT
     echo -e "${Orange}--> [Quiter] <--${NC}"
-    echo -e "${Gray}[INPUT]${NC}${RED} ¿Deseas ver ejemplos de configuración? (S/N): ${NC}"
+    echo -e "${Gray}[INPUT]${NC}${RED} ¿Deseas ver ejemplos de configuración? (Y/N): ${NC}"
     read -p "" respuesta
     respuesta=$(echo "$respuesta" | tr '[:upper:]' '[:lower:]')
-    if [ "$respuesta" == "S" ] || [ "$respuesta" == "s" ]; then
+    if ["$respuesta" == "y"]; then
         f_mostrar_ejemplos
     fi
 
@@ -202,17 +202,15 @@ function f_configurar_dhcp() {
         read -p "" sobrescribir
         sobrescribir=$(echo "$sobrescribir" | tr '[:upper:]' '[:lower:]')
         if [ "$sobrescribir" == "y" ]; then
-            echo -e "${Gray}[COMMAND] sudo cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.bak ${NC}"
-            sudo cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.bak
-            echo -e "${Gray}[COMMAND] cat <<EOF | sudo tee /etc/dhcp/dhcpd.conf > /dev/null... ${NC}"
-            cat <<EOF | sudo tee /etc/dhcp/dhcpd.conf >/dev/null
-            subnet 192.168.1.0 netmask 255.255.255.0 {
-                range 192.168.1.10 192.168.1.50;
-                option routers 192.168.1.1;
-                option domain-name-servers 8.8.8.8, 8.8.4.4;
-            }
-EOF
+            echo -e "${Gray}[COMMAND] sudo systemctl stop isc-dhcp-server ${NC}"
+            sudo systemctl stop isc-dhcp-server
+            echo -e "${Gray}[COMMAND] sudo cp ./dhcpd.conf /etc/dhcp/dhcpd.conf ${NC}"
+            sudo cp ./dhcpd.conf /etc/dhcp/dhcpd.conf
             echo "Archivo de configuración sobrescrito con el ejemplo."
+            echo -e "${Gray}[COMMAND] sudo systemctl restart isc-dhcp-server ${NC}"
+            sudo systemctl restart isc-dhcp-server
+            echo -e "${Gray}[COMMAND] sudo systemctl status isc-dhcp-server ${NC}"
+            sudo systemctl status isc-dhcp-server
         fi
     else
         echo "Respuesta no válida. Opción no reconocida."
