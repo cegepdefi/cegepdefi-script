@@ -1,0 +1,20 @@
+
+========== [ Alpine - nano ] ================
+apk update
+apk add nano
+==============================================
+
+
+========== [ Alpine - SSH ] ================
+apk search openssh
+apk add openssh
+
+# Enable the sshd service at boot time:
+rc-update add sshd
+
+# Start the SSHD service on Alpine Linux immediately using the service
+service sshd start
+
+# for customization purpose.
+nano /etc/ssh/sshd_config
+==============================================

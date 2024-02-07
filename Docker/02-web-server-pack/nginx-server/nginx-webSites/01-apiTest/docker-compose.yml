@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+    nginx:
+        build:
+            context: .
+            args:
+                RAM_AMOUNT: ${RAM_AMOUNT}
+        container_name: ${CONTAINER_NAME}
+        hostname: ${CONTAINER_NAME}
+        volumes:
+            - .web-data:/usr/share/nginx/html/
+            - .web-conf:/etc/nginx/nginx.conf
+        ports:
+            - 82:80
+        environment:
+            - NGINX_HOST=nginx
+            - NGINX_PORT=80        
+
+volumes:
+    web-data:
+    web-conf:
+
+networks:
+    default:
+        name: def_network
+
+# docker-compose up --build

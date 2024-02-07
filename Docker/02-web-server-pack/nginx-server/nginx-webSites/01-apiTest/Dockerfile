@@ -1,0 +1,5 @@
+FROM nginx
+
+ARG RAM_AMOUNT
+ENV ram=${RAM_AMOUNT}
+WORKDIR /server

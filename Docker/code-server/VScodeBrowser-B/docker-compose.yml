@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+    vscode:
+        build:
+            context: .
+        volumes:
+            - .server-data:/data
+            - .server-code:/code
+        ports:
+            - 8443:8443
+            - 8888:8888
+        container_name: "vscode"
+    redis:
+        image: "ruanbekker/vscode:python-3.7"
+
+volumes:
+    server-data:
+    server-code:

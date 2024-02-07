@@ -144,8 +144,8 @@ do
         ;;
         "${iptablesDrop}")
             echo -e "${RED}--> block all of the IP addresses in the ip/24 network range.${NC}";
-            echo -e "${Blue}--> sudo -u root iptables -A INPUT -s 192.168.0.0/24 -j DROP ${NC}";
-            sudo -u root iptables -A INPUT -s 192.168.0.0/24 -j DROP;
+            echo -e "${Blue}--> sudo -u root iptables -A INPUT -s 0.0.0.0/24 -j DROP ${NC}";
+            sudo -u root iptables -A INPUT -s 0.0.0.0/24 -j DROP;
             echo -e "${RED}--> block SSH connections from any IP address ${NC}";
             echo -e "${Blue}--> sudo -u root iptables -A INPUT -p tcp --dport ssh -j DROP ${NC}";
             sudo -u root iptables -A INPUT -p tcp --dport ssh -j DROP;

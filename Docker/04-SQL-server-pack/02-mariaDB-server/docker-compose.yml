@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+    unitydb:
+        image: mariadb
+        restart: always
+        volumes:
+            - ./server-data/conf/conf.d:/etc/mysql/conf.d
+            - ./server-data/data:/var/lib/mysql
+        ports:
+            - 3307:3306
+        container_name: "unity-mariadb"
+        hostname: "unity-mariadb"
+        environment:
+            MARIADB_USER: admin
+            MARIADB_PASSWORD: root
+            MARIADB_ROOT_PASSWORD: root
+            
+    unity-adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8081:8080    
+        container_name: "unity-adminer"
+        hostname: "unity-adminer"
+
+volumes:
+    server-data:
+
+networks:
+    default:
+        name: unity-network
+        external: true
+
+# docker-compose up --build

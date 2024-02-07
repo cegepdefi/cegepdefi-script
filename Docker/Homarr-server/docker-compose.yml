@@ -1,0 +1,21 @@
+version: '3'
+#---------------------------------------------------------------------#
+#     Homarr - A simple, yet powerful dashboard for your server.     #
+#---------------------------------------------------------------------#
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    restart: unless-stopped
+    volumes:
+      - ./homarr/configs:/app/data/configs
+      - ./homarr/icons:/app/public/icons
+    ports:
+      - '7575:7575'
+
+# Link:
+# https://homarr.dev/docs/introduction/installation
+
+# Then, run docker-compose up -d in the same directory. This will start the Homarr container in the background.
+# cd aqui donde esta el archivo
+# docker-compose up -d

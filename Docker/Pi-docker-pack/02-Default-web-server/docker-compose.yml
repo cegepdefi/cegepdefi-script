@@ -1,0 +1,29 @@
+version: "3"
+
+#:/usr/share/nginx/html/
+#:/etc/nginx/templates
+
+services:
+    default-web-nginx:
+        image: arm64v8/nginx:alpine
+        restart: always
+        volumes:
+            - .web-data:/usr/share/nginx/html/
+        ports:
+            - "3001:80"
+        environment:
+            - NGINX_HOST=test.local
+            - NGINX_PORT=80
+        container_name: "default-web-nginx"
+        hostname: "default-web-nginx"
+
+volumes:
+    web-data:
+
+
+networks:
+    default:
+        name: default-web-network
+        external: true
+
+# docker-compose up --build

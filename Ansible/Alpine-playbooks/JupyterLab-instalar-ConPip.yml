@@ -1,0 +1,15 @@
+---
+- name: instalar jupyterlab
+  hosts: 0.0.0.102
+  become: yes #permite usar sudo. pero lo que hace en realidad es cambiarte a root? siempre pedira el passwd de root solo con esto.
+#  become_user: admin
+  tasks:
+    - name: instalar Rust y Cargo
+      community.general.apk:
+       name: rust cargo
+    - name: instalar jupyterlab
+      ansible.builtin.pip:
+       name: jupyterlabclear
+       executable: pip
+
+# sudo apk add py3-pip

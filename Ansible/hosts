@@ -1,0 +1,17 @@
+[allalpine]
+0.0.0.2
+
+[allalpine:vars]
+ansible_user=admin
+ansible_password=admin123
+
+# [allubuntu] : es el nombre del grupo
+[allubuntu]
+0.0.0.2
+
+# creando un atributo o las opciones para
+# los servers que nos conectaremos.
+# nombre y pass de los dos servers??
+[allubuntu:vars]
+ansible_user=admin
+ansible_password=admin123

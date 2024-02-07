@@ -1,0 +1,386 @@
+cp /etc/network/interfaces /etc/network/interfaces.backup01
+
+/usr/share/pve-manager/
+
+
+
+
+============= AMD 5 PCI BIOS Conf =========
+== M.I.T ==
+-Advanced Frequency Settings ->
+	Advanced CPU Core Settings
+	SVM Mode -> Enabled
+	SMT Mode -> Auto
+
+== Bios ==
+-CSM Support -> Disabled
+
+== Peripherals ==
+-Initial Display Output -> PCIe 1 Sot
+-Trusted Computing -> Disabeld
+
+== Chipset ==
+-IOMMU -> Enabled
+
+== Power ==
+-Wake on LAN -> Enabled
+===========================================
+
+
+
+
+
+============= Quitar MSN [ON] =====================
+link : https://johnscs.com/remove-proxmox51-subscription-notice/
+
+sed -Ezi.bak "s/(Ext.Msg.show\(\{\s+title: gettext\('No valid sub)/void\(\{ \/\/\1/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js && systemctl restart pveproxy.service
+============= Quitar MSN [OFF] ====================
+
+
+
+
+============= Dark theme [ON] =====================
+link : https://github.com/Weilbyte/PVEDiscordDark
+
+bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh ) install
+============= Dark theme [OFF] ====================
+
+
+
+============= Cluster [ON]  =====================
+# modificar el archivo para poder Login sin que los 2 server esten prendidos.
+nano /etc/pve/corosync.conf
+
+# en la opcion quorum
+-----
+two_node: 1
+wait_for_all: 0
+------
+
+link : https://pve.proxmox.com/pve-docs/pve-admin-guide.pdf#page=81&zoom=100,76,696
+
+# mac add
+AMD5 enp5s0: 00:00:00:00:
+
+# ver algo
+ethtool <interface> | grep Wake-on
+
+# prender una pc
+# pvenode allows you to wake sleeping members of a cluster via WoL, using the command:
+pvenode wakeonlan <node>
+
+# set mac add para el Wake-on-lan
+pvenode config set -wakeonlan XX:XX:XX:XX:XX:XX
+
+# prender el server2
+pvenode wakeonlan server2
+============= Cluster [OFF] =====================
+
+
+
+============= [usando el comando fdisk] Mount disk [ON] =====================
+
+# to find the right device (usually /dev/sdx)
+fdisk -l
+
+# to edit the disk
+fdisk /dev/sdb
+
+# ver la tabla de particiones
+p
+
+# cambiar el tipo de particion
+t
+
+# tipo Linux file
+83 ?
+
+# Borrar particion
+d
+
+# crear nueva particion
+n
+
+# guardar cambios y salir
+w
+
+# salir sin guardar cambios
+q
+
+============= [usando el comando fdisk] Mount disk [OFF] =====================
+
+
+
+
+============= [usando el comando mkfs] Mount disk [ON]  =====================
+
+# contiene la configuracion (path + tipo + shared) de todos los discos.
+nano /etc/pve/storage.cfg
+
+# ver discos
+lsblk
+
+# ver particiones, mount point y disco % usado
+lsblk -f
+
+# tipos de formato de particiones
+- ext4 (compatible con Proxmox)
+- FAT32 (no)
+- NTFS (no)
+
+# syntaxis para formatear una particion
+mkfs [options] [-t type fs-options] device [size]
+
+# ejemplo de formato de una particion del disco sdb a ext4, FAT32 y NTFS
+mkfs -t ext4 /dev/sdb1
+mkfs -t vfat /dev/sdb1
+mkfs -t ntfs /dev/sdb1
+
+# ver discos de nuevo para verificar los cambios del disco.
+lsblk -f
+
+# crear folder para montar la particion sdb1 del disco sdb
+mkdir -p /media/HitachiHDD500
+
+# montar la particion en el folder
+mount -t auto /dev/sdb1 /media/HitachiHDD500
+
+============= [usando el comando mkfs] Mount disk [OFF] =====================
+
+
+
+
+========== auto mount disk [ON] ==========
+# encontrar el UUID de la particion de un disco con su tipo (eje: ext4)
+# copiar el UUID y el tipo
+blkid
+
+------------------
+# NOTA : UUI de:
+-HitachiHDD500
+/dev/sdb1: UUID="a9d07034-bd09-4117-9e4a-9517f52d512d" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="6ba2f492-01"
+------------------
+
+# make a mount point under /mnt directory
+mkdir /media/HitachiHDD500
+
+# editar la tabla de discos para poner el UUID
+nano /etc/fstab
+
+# en el archivo poner
+UUID=<uuid-of-your-drive>  <mount-point>  <file-system-type>  <mount-option>  <dump>  <pass>
+
+# ejemplo :
+UUID=a9d07034-bd09-4117-9e4a-9517f52d512d  /media/HitachiHDD500  ext4  defaults  0  2
+
+
+# Save and close the file.
+mount -a
+
+# ir a Datacenter
+# Add
+ - Directory
+	-ID: HitachiHDD500
+	-Directory: /media/HitachiHDD500
+
+# The [defaults] mount option will give users read and write access to the file system.
+# The [pass] field is used by the fsck program to determine the order in which filesystem checks are done at reboot time.
+
+========== auto mount disk [ON] ==========
+
+
+
+
+============= AMD5 PCI [ON] =====================
+# Link : https://gist.github.com/qubidt/64f617e959725e934992b080e677656f
+# tuto : https://youtu.be/fgx3NMk6F54
+
+# Cuando todo este listo ya no podras entrar desde la consola.
+# Pero puedes usar el RDP de windows para entrar.
+# Recuerda configurar primero la VM y hacer un Backup antes de poner el PCI.
+-Activar
+-quitar los iconos de MyPC
+-Opciones (abrir en MyPC, no guardar historial, mostrar escondido y extenciones)
+-IP fija
+-Low
+-Activar RDP
+-Nombre Dom
+-CCleaner
+-limpiar
+---> Backup
+---> Snapshots
+
+nano /etc/default/grub
+------
+GRUB_CMDLINE_LINUX_DEFAULT="quiet amd_iommu=on pcie_acs_override=downstream,multifunction video=efifb:eek:ff"
+----
+
+update-grub
+
+nano /etc/modules
+----
+vfio
+vfio_iommu_type1
+vfio_pci
+vfio_virqfd
+----
+
+reboot
+
+# VM configuracion
+----
+BIOS -> OVMF(UEFI)
+Display -> Default
+Machine -> q35
+New EFI DISK
+----
+
+nano /etc/pve/qemu-server/numeroVM.conf
+----
+cpu: host,hidden=1,flags=+pcid
+args: -cpu 'host,+kvm_pv_unhalt,+kvm_pv_eoi,hv_vendor_id=NV43FIX,kvm=off'
+----
+
+# VM configuracion
+----
+PCI -> NVidia
+All function -> true
+Primary GPU -> true
+ROM-Bar -> true
+PCI-Express -> true
+----
+
+# NOTA !!
+# Creo que en la v7.4 ya no existe ese repertorio
+# ahora mira en : https://pve.proxmox.com/wiki/PCI_Passthrough
+# DICE: add to /etc/modules
+# Pero si haces: "cat /etc/modules" ya te apareceran algunas cosas.
+
+--- antiguo 7.x ----
+cp /etc/modprobe.d/blacklist.conf /etc/modprobe.d/blacklist.conf.backup01
+echo "blacklist nvidiafb" >> /etc/modprobe.d/blacklist.conf &&
+echo "blacklist nvidia" >> /etc/modprobe.d/blacklist.conf &&
+echo "blacklist radeon" >> /etc/modprobe.d/blacklist.conf &&
+echo "blacklist nouveau" >> /etc/modprobe.d/blacklist.conf
+----------------
+
+--- nuevo 8.x ----
+cp /etc/modprobe.d/pve-blacklist.conf /etc/modprobe.d/pve-blacklist.conf.backup01
+echo "blacklist nvidiafb" >> /etc/modprobe.d/pve-blacklist.conf &&
+echo "blacklist nvidia" >> /etc/modprobe.d/pve-blacklist.conf &&
+echo "blacklist radeon" >> /etc/modprobe.d/pve-blacklist.conf &&
+echo "blacklist nouveau" >> /etc/modprobe.d/pve-blacklist.conf
+----------------
+============= AMD5 PCI [OFF] =====================
+
+
+
+
+
+============= AMD5 PCI [ON] =====================
+
+nano /etc/default/grub
+----
+GRUB_CMDLINE_LINUX_DEFAULT="quiet amd_iommu=on"
+----
+
+update-grub
+
+nano /etc/modules
+----
+vfio
+vfio_iommu_type1
+vfio_pci
+vfio_virqfd
+----
+
+# no existe
+echo "options vfio_iommu_type1 allow_unsafe_interrupts=1" > /etc/modprobe.d/iommu_unsafe_interrupts.conf
+
+# no existe
+echo "options kvm ignore_msrs=1" > /etc/modprobe.d/kvm.conf
+
+echo "blacklist radeon" >> /etc/modprobe.d/blacklist.conf
+echo "blacklist nouveau" >> /etc/modprobe.d/blacklist.conf
+echo "blacklist nvidia" >> /etc/modprobe.d/blacklist.conf
+
+
+lspci -v
+lspci -n -s 01:00
+
+# 01:00.0 0300: a12:b12 (rev a1)
+# 01:00.1 0400: a12:b12b (rev a1)
+# 01:00.2 0c00: a12:b12c (rev a1)
+# 01:00.3 0c80: a12:b12d (rev a1)
+
+# Para GTX 1660
+echo "options vfio-pci ids=a12:b12,a12:b12b,a12:b12c,a12:b12d disable_vga=1"> /etc/modprobe.d/vfio.conf
+
+update-initramfs -u
+reset
+reboot
+============= AMD5 PCI [OFF] =====================
+
+
+
+============= i5 PCI [ON] =====================
+nano /etc/default/grub
+----
+GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
+----
+
+echo "options vfio-pci ids=a12:b12b,a12:b12c disable_vga=1"> /etc/modprobe.d/vfio.conf
+
+============= i5 PCI [OFF] =====================
+
+
+
+============= Display VirGL GPU [ON] =====================
+link : https://www.youtube.com/watch?v=gkzrAYQHtk4
+
+# instalar para Display VirGL GPU
+apt install libgl1 libegl1 -y
+
+# ()
+TASK ERROR: no DRM render node detected (/dev/dri/renderD*), no GPU? - needed for 'virtio-gl' display
+
+============= Display VirGL GPU [OFF] =====================
+
+
+====== [ Liberar espacio en local(pve) ] ==================
+# En la raiz ver quien ocupa mas espacio
+du -h --max-depth=1 /
+
+# Siempre el LOG ocupara mucho espacio en /var/log/
+du -h --max-depth=1 /var/log/
+
+# Te recomiendo ir en Filezilla y mirar cuantos MB y GB consume cada LOG.
+# NUNCA hacer nano en un archivo LOG de 20GB.
+===========================================================
+
+
+====== [ Backup VM DIR ] ================
+
+# Default location
+/var/lib/vz/dump
+
+# AMD5
+/media/HitachiHDD500/dump/
+
+# Copiar Backup con SSH a otro server
+
+# To copy a file from (B) to (A) while logged into (B):
+scp /path/to/file username@a:/path/to/destination
+
+# To copy a file from (B) to (A) while logged into (A):
+scp username@b:/path/to/file /path/to/destination
+
+# Copiar de AMD9 a AMD5
+scp /var/lib/vz/dump/ root@10.0.0.x:/media/HitachiHDD2TB/dump/
+scp /var/lib/vz/dump/vzdump-qemu-100-.* root@10.0.0.x:/media/HitachiHDD2TB/dump/
+=========================================
+
+
+
+
+

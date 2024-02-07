@@ -1,0 +1,10 @@
+---
+- name: instalar jupyter-notebook
+  hosts: 0.0.0.102
+  become: yes #permite usar sudo. pero lo que hace en realidad es cambiarte a root? siempre pedira el passwd de root solo con esto.
+#  become_user: admin
+  tasks:
+    - name: instalar jupyter-notebook
+      apk:
+        name: jupyter-notebook
+        state: absent

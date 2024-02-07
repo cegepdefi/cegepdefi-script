@@ -1,0 +1,17 @@
+- name: Copiar y ejecutar script
+  hosts: allubuntu
+  tasks:
+  
+    - name: Copiar script
+      copy:
+        src: ~/ansible01/ubuntu-playbooks/copia-executa-script/copia-exec-script.sh #ruta de ct ansible script
+        dest: copia-exec-script.sh #/ruta/en/el/host/remoto/script.sh
+        mode: '0755'
+
+    - name: Ejecutar script
+      script: copia-exec-script.sh "argumento1" "argumento2" #/ruta/en/el/host/remoto/script.sh
+      register: resultado_script
+
+    - name: Mostrar resultado del script
+      debug:
+        var: resultado_script.stdout_lines

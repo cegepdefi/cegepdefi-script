@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+    ubuntu-test:
+        build:
+            context: .
+        volumes:
+            - .server-data:/server
+        ports:
+            - 2022:22
+        container_name: ${CONTAINER_NAME}
+        hostname: ${CONTAINER_NAME}
+
+volumes:
+    server-data:
+
+networks:
+    default:
+        name: test-network
+
+
+# docker-compose up
+
+# =============== [Nginx Proxy user] =========================
+# http://localhost:81
+# admin@example.com : changeme : nextcloud-app
+# Administrator: admin : admin@test.local : admin123
+# ============================================================

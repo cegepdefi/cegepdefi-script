@@ -1,0 +1,58 @@
+============[ INSTALLING DOCKER-COMPOSE ]=============
+//Update your packages
+sudo apt-get update
+
+//Install almighty python and pip
+sudo apt-get install -y python python-pip
+
+//And lastly…
+sudo pip install docker-compose
+
+//And that’s it, you should now be able to run
+docker-compose build in your project.
+=======================================================
+
+
+============[ INSTALLING DOCKER-COMPOSE UBUNTU ]=============
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+docker-compose --version
+=============================================================
+
+
+
+============[ INSTALLING DOCKER-COMPOSE PI Debian ]=============
+sudo apt-get install libffi-dev libssl-dev -y
+sudo apt install python3-dev -y
+sudo apt-get install -y python3 python3-pip
+pip3 install docker-compose
+==================================================================
+
+
+
+============[ INSTALLING DOCKER-COMPOSE Alpine ]=============
+apk update
+apk add nano
+
+# Step 1. Open the APK repository configuration file:
+nano /etc/apk/repositories
+
+# Step 2. Add the following two lines:
+#/media/cdrom/apks
+http://ftp.halifax.rwth-aachen.de/alpine/v3.16/main
+http://ftp.halifax.rwth-aachen.de/alpine/v3.16/community
+
+# Step 3. Update the Repo
+apk update
+
+# Step 4. Install Docker and Docker Compose
+apk add docker docker-cli-compose
+
+# Step 5. Verify the Docker and Docker Compose version
+docker version
+
+# Step 6: Verify Docker Compose Version
+docker compose version
+=============================================================

@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  unity-php-apache:
+    image: php:7.4-apache
+    restart: always
+    build:
+      context: .
+    volumes:
+      - ./server-data/html:/var/www/html
+    ports:
+      - 3010:80
+    container_name: "unity-php-apache"
+    hostname: "unity-php-apache"
+
+  unity-mariadb:
+    image: mariadb
+    restart: always
+    volumes:
+      - ./server-data/mariadb/data:/var/lib/mysql
+    ports:
+      - 3011:3306
+    container_name: "unity-mariadb"
+    hostname: "unity-mariadb"
+    environment:
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: root
+      MARIADB_ROOT_PASSWORD: root
+
+  unity-adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 3012:8080
+    container_name: "unity-adminer"
+    hostname: "unity-adminer"
+
+volumes:
+  server-data:
+
+
+networks:
+  default:
+    name: unity-network
+    external: true
+
+# docker-compose up --build

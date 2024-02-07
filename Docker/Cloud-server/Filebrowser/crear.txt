@@ -1,0 +1,10 @@
+
+// link tutorial : https://youtu.be/W2yZ5_sd9Hc?t=308
+
+-------------- [install] ------------------
+cmd admin...
+
+cd "C:\...\Filebrowser"
+
+docker-compose up -d --force-recreate
+--------------------------------

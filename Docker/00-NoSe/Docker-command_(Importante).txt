@@ -1,0 +1,15 @@
+============== [Portainer install] =======================
+cmd como Admin
+docker volume create portainer_data
+docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
+======
+// link : https://stackoverflow.com/questions/72583330/portainer-client-sent-an-http-request-to-an-https-server-despite-the-url-is-h
+docker run -d -p 9000:9000 -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
+============================================================
+
+
+=============== [para executar dockerfile] =================
+cmd como Admin
+cd "C:\...\folderDondeEstaDockerfile"
+docker-compose up --build
+============================================================

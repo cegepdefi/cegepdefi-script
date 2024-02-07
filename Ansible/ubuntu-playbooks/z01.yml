@@ -1,0 +1,8 @@
+- hosts: allubuntu
+  tasks:
+    - name: Ejecutar comando y mostrar resultado
+      shell: ls -l
+      register: salida_comando
+
+    - debug:
+        var: salida_comando.stdout_lines

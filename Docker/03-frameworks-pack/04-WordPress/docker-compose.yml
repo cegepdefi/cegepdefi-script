@@ -1,0 +1,65 @@
+version: "3"
+
+# Link : https://docs.docker.com/samples/wordpress/
+
+services:
+    wordpress-db:
+        # We use a mariadb image which supports both amd64 & arm64 architecture
+        image: mariadb:10.6.4-focal
+        restart: always
+        build:
+            context: .
+        # If you really want to use MySQL, uncomment the following line
+        #image: mysql:8.0.27
+        command: '--default-authentication-plugin=mysql_native_password'
+        volumes:
+            - ./server-data/mariadb/mysql:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=admin123
+            - MYSQL_DATABASE=admin
+            - MYSQL_USER=admin
+            - MYSQL_PASSWORD=admin123
+        container_name: "wordpress-db"
+        hostname: "wordpress-db"
+
+    wordpress-web:
+        image: wordpress:latest
+        restart: always
+        build:
+            context: .
+        volumes:
+            - ./server-data/html:/var/www/html
+        ports:
+            - 60280:80
+        environment:
+            - WORDPRESS_DB_HOST=wordpress-db
+            - WORDPRESS_DB_USER=admin
+            - WORDPRESS_DB_PASSWORD=admin123
+            - WORDPRESS_DB_NAME=admin
+        container_name: "wordpress-web"
+        hostname: "wordpress-web"
+        links:
+            - "wordpress-db"
+
+    wordpress-adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 60281:8080
+        container_name: "wordpress-adminer"
+        hostname: "wordpress-adminer"
+        links:
+            - "wordpress-db"
+
+volumes:
+    server-data:
+
+
+networks:
+    default:
+        name: wordpress-network
+        external: true # If you want your containers to join a pre-existing network, use the "external"
+
+
+# docker-compose up --build
+# docker compose up -d

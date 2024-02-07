@@ -1,0 +1,10 @@
+# [ctlaravel] : es el nombre del grupo
+[ctlaravel]
+0.0.0.151
+
+# creando un atributo o las opciones para
+# los servers que nos conectaremos.
+# nombre y pass de los dos servers??
+[ctlaravel:vars]
+ansible_user=admin
+ansible_password=admin123

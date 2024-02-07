@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  unity-php-apache:
+    image: php:7.4-apache
+    restart: always
+    volumes:
+      - ./server-data/html:/var/www/html
+    ports:
+      - 8082:80
+    container_name: "unity-php-apache"
+    hostname: "unity-php-apache"
+
+volumes:
+  server-data:
+
+
+networks:
+  default:
+    name: unity-network
+    external: true
+
+# docker-compose up --build

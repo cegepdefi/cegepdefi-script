@@ -1,0 +1,70 @@
+version: "3"
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    hostname: "nginx-proxy-manager"
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '40080:80' # Public HTTP Port
+      - '40443:443' # Public HTTPS Port
+      - '40081:81' # Admin Web Port
+      # Add any other Stream port you want to expose
+      # - '21:21' # FTP
+    environment:
+      DB_MYSQL_HOST: "nginx-proxy-manager-db"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "admin"
+      DB_MYSQL_PASSWORD: "admin123"
+      DB_MYSQL_NAME: "npm"
+      # Uncomment this if IPv6 is not enabled on your host
+      DISABLE_IPV6: 'true'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    depends_on:
+      - db
+
+  db:
+    image: 'jc21/mariadb-aria:latest'
+    restart: unless-stopped
+    hostname: "nginx-proxy-manager-db"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'admin123'
+      MYSQL_DATABASE: 'npm'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'admin123'
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+networks:
+    default:
+        name: def_network
+
+
+# ========== [reser passw] ================
+# sudo chown -R <YOUR UDERNAME>:<YOUR UDERNAME> /home/<YOUR UDERNAME>
+# docker-compose up
+# sudo docker-compose -f docker-compose.yaml up
+# sudo docker exec -it nginx-proxy-manager-db-1 sh
+#
+# ------
+# mysql -u root -p
+# pass: admin123
+#
+# USE npm;
+# UPDATE user SET is_deleted=1;
+# quit
+# exit
+
+# ------
+# Default Email + Pas
+# Email: admin@example.com
+# Ps: changeme
+
+# ------
+# FullName: admin
+# Nickname: admin
+# Email: admin@test.local
+# Ps: admin123
+# ==========================================

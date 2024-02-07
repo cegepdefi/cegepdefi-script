@@ -1,0 +1,47 @@
+deluser --remove-home pi
+deluser --remove-all-files pi
+
+====================
+service apache2 stop
+
+apt-get purge apache2 apache2-utils
+
+apt-get autoremove
+
+whereis apache2
+
+====================
+service nginx stop
+
+apt-get purge nginx nginx.*
+
+apt-get autoremove
+
+whereis nginx
+
+====================
+ufw app list
+ls /etc/ufw/
+ls /etc/ufw/applications.d/
+ufw status numbered
+====================
+
+=============[ssh key]=======
+mkdir ~/.ssh && chmod 700 ~/.ssh
+===windows cmd===
+ssh-keygen -b 4096
+scp C:\Users\admin\.ssh\id_rsa.pub admin@admin:~/.ssh/authorized_keys
+ssh admin@0.0.0.3 -p 1108
+===linux===
+sudo ss -tupln
+===desistalar el avehi-daemon===
+sudo apt-get purge avahi-daemon
+iptables -A INPUT -p tcp --destination-port [port number] -j DROP
+service iptables save
+service iptables restart
+===bloquear ping===
+sudo nano /etc/ufw/before.rules
+-A ufw-before-input -p icmp --icmp-type echo-request -j DROP
+sudo ufw reload
+sudo reboot
+====================

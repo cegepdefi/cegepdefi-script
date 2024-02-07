@@ -1,0 +1,48 @@
+
+========== Link Tuto =========
+https://youtu.be/5N6gTVCG_rw
+
+-No he terminado el tutorial, me quede en esta parte :
+https://youtu.be/5N6gTVCG_rw?t=704
+
+-El mismo tutorial pero descargando todo desde GitHub ?
+https://youtu.be/I980aPL-NRM
+==============================
+
+
+====================
+-Cambia los puertos
+-nombre carta red
+-nombre CT
+-nombre DB, folder
+-depends_on .. ?
+====================
+
+
+========== Crear CT ==========
+cmd admin
+cd files/ApacheServers/03-laravel-lab/
+docker-compose build && docker-compose up -d
+==============================
+
+
+========== Crear proj Laravel ===============
+-tienes que tener composer "Lo de PHP VS Docker-compose ?" instalado
+-el comando va crear los archivos al igual que en Angular o NodeJSExpress
+-cd /var/www/html/ o /var/www/html/public/ ??
+
+composer create-project laravel/laravel .
+=============================================
+
+
+
+
+
+
+
+
+
+
+
+
+

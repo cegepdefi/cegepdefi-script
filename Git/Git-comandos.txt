@@ -1,0 +1,29 @@
+
+
+--------------------------------
+git init
+
+git clone /path
+
+git clone username@host:/path
+
+
+--------------------------------
+Working Directory -> [add] Index (Stage) -> [commit] HEAD
+
+--------------------------------
+# Add it to the Index using:
+git add <filename>
+git add *
+
+# commit to add it to the HEAD, but not in remote repository yet.
+git commit -m "Commit message"
+
+--------------------------------
+# push the local last commit to the remote repository
+# your changes are in the HEAD of your local working copy.
+# To send those canges to your remote repository, execute:
+git push origin master
+
+git remote add origin <server>
+--------------------------------

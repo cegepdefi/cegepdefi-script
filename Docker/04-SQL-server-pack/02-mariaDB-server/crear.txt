@@ -1,0 +1,5 @@
+cmd admin...
+
+cd "C:\.....\directorio .yml"
+
+docker-compose up --build

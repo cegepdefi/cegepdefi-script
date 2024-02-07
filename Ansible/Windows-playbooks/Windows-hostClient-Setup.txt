@@ -1,0 +1,111 @@
+
+Link tuto: https://www.youtube.com/watch?v=-vPXS8UuJoI
+
+Link Blog Guia: https://www.ansiblepilot.com/articles/configure-a-windows-host-for-ansible-ansible-winrm/
+
+Link Ansible Doc: https://docs.ansible.com/ansible/latest/os_guide/windows_setup.html#id1
+
+
+
+1) verify PowerShell version
+Get-Host | Select-Object Version
+
+2) verify .NET version
+Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -Recurse 
+| Get-ItemProperty -Name version -EA 0 | Where { $_.PSChildName -Match '^(?!S)\p{L}'} | Select PSChildName, version
+
+3) Verify WinRM not-configured
+winrm get winrm/config/Service
+winrm get winrm/config/Winrs
+winrm enumerate winrm/config/Listener
+
+4) Setup WinRM "Solo funciona con powershell ADMIN"
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+$file = "$env:temp\ConfigureRemotingForAnsible.ps1"
+(New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
+powershell.exe -ExecutionPolicy ByPass -File $file
+
+5) Verify WinRM configured
+winrm get winrm/config/Service
+winrm get winrm/config/Winrs
+winrm enumerate winrm/config/Listener
+
+Link de esta parte: https://youtu.be/-vPXS8UuJoI?t=912
+6) Ansible Controller / inventory
+[windows]
+windows10 ansible_host=0.0.0.102
+[windows:vars]
+ansible_user=ansible
+ansible_password=admin123
+ansible_port=5986
+ansible_connection=winrm
+ansible_winrm_transport=basic
+ansible_winrm_server_cert_validation=ignore
+
+Link de esta parte: https://youtu.be/-vPXS8UuJoI?t=928
+7) win_ping.yml / playbook
+---
+- name: win_ping module demo
+  hosts: windows
+  become: false
+  gather_facts: false
+  tasks:
+    - name: test connection
+      ansible.windows.win_ping:
+
+8) pip install pywinrm
+
+9) execution
+ansible-playbook -i ./inventory ./win_ping.yml
+ansible-playbook -i ./inventory ./win_ping.yml -v
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

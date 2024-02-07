@@ -1,0 +1,3 @@
+FROM tomsik68/xampp
+ARG RAM_AMOUNT
+ENV ram=${RAM_AMOUNT}

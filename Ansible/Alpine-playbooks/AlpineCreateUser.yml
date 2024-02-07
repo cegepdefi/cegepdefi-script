@@ -1,0 +1,19 @@
+---
+- name: instalar Docker y portainer
+  hosts: 0.0.0.157
+  become: yes
+  tasks:
+    - name: Create user admin and grant group user_ro and docker to it
+      community.postgresql.postgresql_user:
+        name: admin
+        groups:
+          - wheel
+          - docker
+        # Create user with a cleartext password if it does not exist or update its password.
+        password: admin123
+
+# Execturar con el comando:
+# ansible-playbook ./Alpine-playbooks/Docker-install.yml -K
+
+# NOTA: el comando ansible solo funciona
+# si estas en el mismo folder que el archivo hosts

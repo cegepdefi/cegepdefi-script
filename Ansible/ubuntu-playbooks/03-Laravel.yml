@@ -1,0 +1,43 @@
+---
+- hosts: allubuntu
+  become: true
+  tasks:
+    - name: Install PHP and related packages
+      apt:
+        name:
+          - php
+          - php-cli
+          - php-fpm
+          - php-mysql
+          - php-curl
+          - php-gd
+          - php-mbstring
+          - php-xml
+        state: present
+
+    - name: Install Composer
+      shell: curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+
+    - name: Install Laravel via Composer
+      shell: composer global require laravel/installer
+
+    - name: Add Composer to PATH
+      lineinfile:
+        path: ~/.bashrc
+        line: 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"'
+        create: yes
+
+    - name: Create new Laravel project
+      shell: laravel new myproject --force
+
+    - name: Set permissions on Laravel storage directory
+      file:
+        path: /admin/storage/
+        state: directory
+        mode: '0777'
+
+# Execturar con el comando:
+# ansible-playbook ./ubuntu-playbooks/03-Laravel.yml -K
+
+# NOTA: el comando ansible solo funciona
+# si estas en el mismo folder que el archivo hosts

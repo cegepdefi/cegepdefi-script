@@ -1,0 +1,34 @@
+Modifying Windows update settings can be risky and can lead to security vulnerabilities.
+It is recommended that you keep your Windows updates enabled and install the latest
+security patches to keep your system secure.
+
+However, if you still want to disable Windows update and block the check for updates,
+you can use the following PowerShell command:
+
+```
+Set-Service -Name wuauserv -StartupType Disabled
+```
+
+This command will disable the Windows Update service and prevent it from starting automatically.
+To block the check for updates, you can create a new registry key using the following PowerShell
+command:
+
+```
+New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "AU" -Force
+```
+
+This will create a new registry key named "AU" under the WindowsUpdate folder in the registry.
+To block the check for updates, you need to set the value of the "AU" key to 1. You can do this
+using the following PowerShell command:
+
+```
+New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoUpdate" -Value 1 -Force
+```
+
+This command will create a new registry value named "NoAutoUpdate" and set its value to 1.
+This will block the check for updates. Note that you may need to restart your computer for
+these changes to take effect.
+
+Again, it is not recommended to disable Windows update and block the check for updates as
+this can make your system vulnerable to security risks. It is better to keep your system
+up-to-date with the latest security patches.

@@ -1,0 +1,5 @@
+cmd admin...
+
+cd "C:\Users\...\02-web-lab"
+
+docker-compose up --build

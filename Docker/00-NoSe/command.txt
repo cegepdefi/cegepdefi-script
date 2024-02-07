@@ -1,0 +1,5 @@
+# Linux
+docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=admin123 -d mysql
+
+# Windows
+docker run --name mysql -e MYSQL_ROOT_PASSWORD=admin123 -d -v "C:\...\SQL-doc":/sqldoc mysql

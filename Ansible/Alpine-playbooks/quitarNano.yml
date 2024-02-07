@@ -1,0 +1,10 @@
+---
+- name: quitarNano
+  hosts: linux
+  become: yes #permite usar sudo. pero lo que hace en realidad es cambiarte a root? siempre pedira el passwd de root solo con esto.
+#  become_user: admin
+  tasks:
+    - name: desinstalar Nano
+      apk:
+        name: nano
+        state: absent

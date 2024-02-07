@@ -1,0 +1,52 @@
+=========== [Proxmox] ============
+------------ [Path de index.html de proxmox] ----------
+/usr/share/pve-manager/
+
+-----------[intento de recuperar los archivos por defecto del index.html de proxmox]-----------
+// https://forum.proxmox.com/threads/im-loosing-my-pve-manager-please-tell-me-how-to-recover-it.12014/
+apt-cache search pve
+dpkg -l | grep pve
+cat /etc/apt/sources.list
+=================================
+
+
+=============== [DOCKER xampp y httpd] ==================
+# xamp
+sudo docker run --name site01 -p 41061:22 -p 41062:80 -t -d -v /www/site01:/www tomsik68/xampp
+
+# /opt/lampp/htdocs
+sudo docker run --name site01 -p 41061:22 -p 41062:80 -t -d -v /www/site01:/opt/lampp/htdocs tomsik68/xampp
+
+# apache
+sudo docker run --name site01 -p 80:80 -t -d -v /www/site01:/usr/local/apache2/htdocs/ httpd
+=================================
+
+
+============ [Windows remove samba connecion] ===========
+// powershell delete samba account
+// link : https://docs.microsoft.com/en-us/powershell/module/smbshare/revoke-smbshareaccess?view=windowsserver2022-ps
+Remove-SmbShare
+Revoke-SmbShareAccess
+==========================================================
+
+
+======================= [Apache Proxy] =============================
+// link : https://stackoverflow.com/questions/49264026/apache2-vhost-conf-redirect-to-different-server
+------------------------
+cd /etc/apache2/sites-available
+nano linkSitio.com.conf
+----------------------
+<VirtualHost *:80>
+	ServerAdmin webmaster@localhost
+	ServerName pchan.sytes.net
+	ServerAlias pchan.sytes.net
+	DocumentRoot /var/www/pchan.sytes.net/public_html
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+------------------------
+a2enmod proxy
+a2enmod proxy_http
+a2ensite linkSitio.com.conf
+sudo systemctl restart apache2
+=============================================================

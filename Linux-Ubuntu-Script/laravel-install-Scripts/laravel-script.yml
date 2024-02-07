@@ -1,0 +1,34 @@
+---
+- name: Laravel Copiar y ejecutar script
+  hosts: 0.0.0.151
+  become: yes
+  tasks:
+    # - name: Install PHP and related packages
+    #   apt:
+    #     name:
+    #       - php
+    #       - php-cli
+    #       - php-fpm
+    #       - php-mysql
+    #       - php-curl
+    #       - php-gd
+    #       - php-mbstring
+    #       - php-xml
+    #     state: present
+  
+    - name: Laravel Copiar script
+      copy:
+        src: ./laravel-script.sh #ruta de ct ansible script
+        dest: laravel-script.sh #/ruta/en/el/host/remoto/script.sh
+        mode: '0755'
+
+    - name: Ejecutar script
+      shell: echo Admin1234 | sudo bach -S laravel-script.sh "argumento1" "argumento2"
+
+    # - name: Ejecutar script
+    #   script: laravel-script.sh "argumento1" "argumento2" #/ruta/en/el/host/remoto/script.sh
+    #   register: resultado_script
+
+    # - name: Mostrar resultado del script
+    #   debug:
+    #     var: resultado_script.stdout_lines

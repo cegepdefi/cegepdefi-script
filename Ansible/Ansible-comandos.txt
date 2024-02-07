@@ -1,0 +1,113 @@
+------ Servers ----
+ssh root@0.0.0.150
+ssh admin@0.0.0.150
+
+
+-------- Links --------
+# alpine ansible wiki
+https://wiki.alpinelinux.org/wiki/Ansible
+
+# ansible Doc
+https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html
+
+
+-------- Alpine def comand ---------
+apk update
+apk upgrade
+apk add nano
+
+----- SSH ------
+# SSH SI es necesario en los otros Server
+# ansible usa Python para comunicar con los otros servers.
+# tambien da conflicto si ya teniamos un Key de un server antes.
+apk add openssh
+apk add sshpass
+apk add --update openssh
+rc-update add sshd
+service sshd start
+nano /etc/ssh/sshd_config
+rm -r /home/admin/.ssh
+
+----- Sudo ------
+su -
+apk add sudo
+echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/wheel 
+adduser admin wheel
+sudo -lU admin
+
+---- Ansible install ----
+
+# A) Instalarlo desde el apk de Alpine
+sudo apk add ansible
+ssh-keygen -t ed25519
+
+# B) Intalarlo usando Python
+sudo apk add --update python3
+sudo apk add py3-pip
+sudo pip3 install ansible
+
+---- Ansible Setup ----
+# puedes usar el archivo por defecto o crear uno
+sudo nano /etc/ansible/hosts
+# este comando crea un folder y el archivo hosts
+mkdir -p /home/admin/ansible01 && touch /home/admin/ansible01/hosts
+# o puedes modificar directamente el archivo
+mkdir -p /home/admin/ansible01 && nano /home/admin/ansible01/hosts
+
+# creamos un grupo para poner los servers con su username + passwd
+nano /home/admin/ansible01/hosts
+
+# [linux] : es el nombre del grupo
+[linux]
+0.0.0.101
+0.0.0.102
+# creando un atributo o las opciones para
+# los servers que nos conectaremos.
+# nombre y pass de los dos servers??
+[linux:vars]
+ansible_user=admin
+ansible_password=Admin1234
+
+
+
+# para que funcione tambien necesitas del archivo ansible.cfg
+nano /home/admin/ansible01/ansible.cfg
+
+
+# solo necesitamos poner:
+[defaults]
+inventory      = /home/admin/ansible01/hosts
+# No recomendado. False: hace que no necesitemos configurar SSH Key?
+host_key_checking = False
+
+
+# hacerle ping al grupo de server que hicimos
+# le hace ping a todos los server de ese grupo
+ansible linux -m ping
+ansible all -m ping
+
+# enviar un comando a todos los servers del grupo linux
+ansible linux -a "cat /etc/os-release"
+ls
+
+---- Ansible Playbook ----
+# Playbook -> Plays -> Task
+# Playbook es un archivo yaml .yml
+# es un archivo que contiene una lista de comandos
+# que podemos enviar ya sea a un grupo de server o por separado
+# puedes llamar el archivo como quieras pero tiene que tener la extencion .yml
+# para executarlo usa : ansible-playbook nombreArchivo.yml
+# para executarlo con "become / sudo / change user" usa : ansible-playbook nombreArchivo.yml -K
+# ejemplo de archivo .yml :
+
+---
+  - name: iluvnan   #este es el Play, inicia aqui con un nombre.
+    hosts: linux   #el nombre del grupo y del server que enviaremos el comando
+    become: yes #permite usar sudo
+    tasks:
+        - name: ensure nano is there    #descripcion
+          apk:  #este es el modulo, cambialo segun el OS. apk para alpine y apt para ubuntu
+            name: nano  #lo que queremos instalar
+            state: latest   #la version del pack que queremos instalar
+
+

@@ -1,0 +1,14 @@
+- hosts: allubuntu #Nombre del grupo.
+  tasks:
+    - name: Verificar espacio en disco
+      shell: df -h | awk '{print $1,$2,$3,$4,$5,$6}'
+      register: salida_comando
+
+    - debug:
+        var: salida_comando.stdout_lines
+
+# Execturar con el comando:
+# ansible-playbook ./ubuntu-playbooks/02-espacio-disco.yml
+
+# NOTA: el comando ansible solo funciona
+# si estas en el mismo folder que el archivo hosts

@@ -1,0 +1,17 @@
+version: '3'
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - /PATH_TO_YOUR_CONFIG:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - '8123:8123'
+    network_mode: host
+
+# docker pull homeassistant/home-assistant
+# docker compose up -d
+# http://<host>:8123

@@ -1,0 +1,19 @@
+
+========= [ DVD 2022-12-02 ] =========
+01-DockerCompose-DefaultFiles
+02-nginx-server
+03-xampp-server
+04-web-server-pack
+05-frameworks-pack
+06-Minecraft-server-pack
+07-SQL-server-pack
+08-Cloud-server
+Jenkins
+Pi-docker-pack
+python
+01-install docker.txt
+02-install portainer.txt
+03-install docker compose.txt
+04-Docker-Command.txt
+05-install-command.txt
+=====================================

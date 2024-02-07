@@ -1,0 +1,9 @@
+[Unit]
+Description=Laravel Service
+After=network.target
+
+[Service]
+ExecStart=/home/admin/laravel-start.sh
+
+[Install]
+WantedBy=multi-user.target

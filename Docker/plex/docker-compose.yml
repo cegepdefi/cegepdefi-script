@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  pley:
+    container_name: plex
+    image: plexinc/pms-docker
+    restart: unless-stopped
+    environment:
+      - TZ=GMT-6
+      - PLEX_CLAIM= #optional
+    volumes:
+      - ./database:/conf
+      - ./transcode:/transcode
+      - ./media:/data
+    ports:
+      - '32400:32400'
+
+# Link:
+# https://www.rapidseedbox.com/blog/plex-on-docker
+
+# Then, run docker-compose up -d in the same directory. This will start the Homarr container in the background.
+# cd aqui donde esta el archivo
+# docker-compose up -d

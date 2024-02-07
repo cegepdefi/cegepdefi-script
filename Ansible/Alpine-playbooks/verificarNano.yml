@@ -1,0 +1,10 @@
+---
+- name: verificarNano
+  hosts: allalpine
+  become: yes #permite usar sudo. pero lo que hace en realidad es cambiarte a root? siempre pedira el passwd de root solo con esto.
+#  become_user: admin
+  tasks:
+    - name: asegurar que nano este instalado
+      apk:
+        name: nano
+        state: latest

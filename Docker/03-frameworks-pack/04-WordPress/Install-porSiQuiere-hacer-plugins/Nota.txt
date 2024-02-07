@@ -1,0 +1,48 @@
+1) Cuidao con el FireWall
+   El jodio antivirus Bitdefender
+   me bloqueaba cada cosita de cualquier lugar
+   hasta me bloqueaba solo ir a google.com en Google Chrome
+
+2) dale, pon todo lo que esta dentro de php-8..zip en:
+    c:\php8
+
+3) prendelo! executa el executable Composer-Setup.exe
+
+
+
+
+4) El jodio Visual Studio Code puede que de error
+   dique por un Global de phpcs no se que...
+
+5) para eso solo executa en la terminal
+
+   comando: composer global require squizlabs/php_codesniffer
+
+   cuidao con el firewall
+   cuidao con Admin vs no Admin porque creo que este busca algo en:
+   c:\Users\{userName}\appdata\noSeQue...
+
+6) si no te funciona mira el link. a mi me funciono lo de casi el final:
+https://stackoverflow.com/questions/47174009/visual-studio-code-unable-to-locate-phpcs
+
+7) no se si toda esa mierda funciona
+https://github.com/WordPress/WordPress-Coding-Standards
+
+8) lo que si me funciono fue dajar el cursor
+   en las lineas rojas y desinstalar lo que me decia
+   que correjia "inteliphenoseque" y "phpcs"
+   ya con eso no me salen las lineas rojas
+   y creo que por usar el pack de git "wpcs->NO"
+   "phpcs->puede que si"
+   PERO.. creo que solo necesitaba 1 sola extension
+   "WordPress Hooks IntelliSense" 
+
+9) los que dengo instalados son:
+   - WordPress Hooks IntelliSense
+   - ClassicPress Snippets & Auto-Completions
+   - DocBlocker
+   - PHP Debug
+   - PHP DocBlocker
+   - PHP Extension Pack
+   - PHP IntelliSense
+   - PHP Sniffer & Beautifier

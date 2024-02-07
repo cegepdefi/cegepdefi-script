@@ -1,0 +1,1 @@
+docker run --name xampp01 -p 41061:22 -p 8080:80 -d -v ~/MyDockerFiles/apache-webSites/apacheTest01:/www tomsik68/xampp

@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  python-twitchio:
+    build:
+      context: .
+    volumes:
+      - .server-data:/home/twitch
+    ports:
+      - "8083:80"
+      - "2022:22"
+    restart: always
+    container_name: "python-twitchio"
+    hostname: "python-twitchio"
+
+volumes:
+  server-data:
+
+
+networks:
+  default:
+    name: test-network
+    external: true
+
+
+# docker-compose up --build
+# docker build -t alpine-sshd .

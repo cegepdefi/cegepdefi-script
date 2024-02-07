@@ -1,0 +1,18 @@
+===============================================================
+
+//=== xampp [ssh + http]
+docker run --name xamppCT01 -p 41061:22 -p 8082:80 -d -v "C:\...\www":/www tomsik68/xampp
+
+//=== ng
+
+//=== apache
+
+//=== php
+docker run --name phpCT01 -d -v "C:\...\myapp":/usr/src/myapp php:7.4-rc-cli
+
+//=== mysql []
+docker run --name mysqlCT01 -e MYSQL_ROOT_PASSWORD=admin123 -d -v "C:\...\sqldoc":/sqldoc mysql
+
+//=== mongoDB
+
+===============================================================

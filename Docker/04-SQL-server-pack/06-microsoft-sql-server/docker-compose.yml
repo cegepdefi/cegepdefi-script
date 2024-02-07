@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+    MicrosoftSqlServer:
+        build:
+            context: .
+            args:
+                RAM_AMOUNT: ${RAM_AMOUNT}
+        volumes:
+            - .server-data:/
+        ports:
+            - 25567:25565
+        container_name: ${CONTAINER_NAME}
+
+volumes:
+    server-data:
+
+# docker-compose up --build

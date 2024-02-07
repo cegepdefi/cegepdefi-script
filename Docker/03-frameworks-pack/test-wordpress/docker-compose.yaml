@@ -1,0 +1,50 @@
+version: '3'
+services:
+  01-HomePage-wordpress: # Cambiando el nombre del contenedor WordPress -> 01-HomePage-wordpress
+    image: wordpress
+    # container_name: 01-HomePage-wordpress
+    ports:
+      - "40082:80"
+    environment:
+      WORDPRESS_DB_HOST: 01-HomePage-wordpress-mysql # db -> 01-HomePage-wordpress-mysql
+      WORDPRESS_DB_USER: admin
+      WORDPRESS_DB_PASSWORD: admin123
+      WORDPRESS_DB_NAME: wordpress_db
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+      - ./wp-config.php:/var/www/html/wp-config.php
+    command: ["sh", "-c", "chown -R www-data:www-data /var/www/html/wp-content && docker-entrypoint.sh apache2-foreground"]
+
+  01-HomePage-wordpress-mysql: # Cambiando el nombre del contenedor MySQL. db -> 01-HomePage-wordpress-mysql
+    image: mysql:5.7
+    # container_name: 01-HomePage-wordpress-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin123
+      MYSQL_DATABASE: wordpress_db
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+
+# Errores
+# 1) No se puede conectar a la DB [Arreglado]
+# 2) no puedo cambiar permisos de lectura y escritura 0600 o editar archivos [Mas o menos arreglado]
+# 3) no puedo crear un post o una nueva pag ni editar nada y se queda en blanco al editar [No se como arreglarlo F]
+
+# Crear imagen del dock..yaml
+# -----
+# sudo chown -R admin:admin /home/admin
+# sudo chmod +x entrypoint.sh
+# sudo chmod 777 entrypoint.sh
+# -----
+# sudo docker image prune
+# sudo docker image ls -f "dangling=true"
+# docker-compose up -d
+# -----
+
+# -----
+# Your login URL will be:
+# http://lab.vtuberapps.com/newlogin
+# In case you can't login, use the safe URL:
+# http://lab.vtuberapps.com/wp-login.php?IchUwLqWvHJimeSV=eBPaIOCgQAEUxvDp
+# -----

@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  unity-phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    volumes:
+      - ./server-data/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+    ports:
+      - 8082:80
+    environment:
+      - PMA_ARBITRARY=1
+    container_name: "unity-phpmyadmin"
+    hostname: "unity-phpmyadmin"
+
+volumes:
+  server-data:
+
+
+networks:
+  default:
+    name: unity-network
+    external: true

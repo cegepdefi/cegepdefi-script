@@ -1,0 +1,32 @@
+---
+- name: instalar Docker y portainer
+  hosts: 0.0.0.157
+  become: yes
+  tasks:
+
+    - name: instalar Docker
+      apk:
+        available: no # not required. During upgrade, reset versioned world dependencies and change logic to prefer replacing or downgrading packages (instead of holding them) if the currently installed package is no longer available from any repository.
+        name: docker docker-cli-compose # not required. A package name, like C(foo), or multiple packages, like C(foo, bar).
+        state: latest
+
+    - name: agregar root al grupo docker.
+      shell: addgroup root docker
+
+    - name: agregar admin al grupo docker.
+      shell: addgroup admin docker
+
+    - name: hacer que docker daemon inice al CT powerON.
+      shell: rc-update add docker boot
+
+    - name: start docker -> executa esto si ves MSN cannot connect to the Docker Daemon at unix..
+      shell: service docker start
+
+    - name: Crear el container Portainer.
+      shell: docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest;
+
+# Execturar con el comando:
+# ansible-playbook ./Alpine-playbooks/Docker-install.yml -K
+
+# NOTA: el comando ansible solo funciona
+# si estas en el mismo folder que el archivo hosts

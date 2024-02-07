@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+
+  laravelMariadb:
+    image: docker.io/bitnami/mariadb:10.6
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=no
+      - MARIADB_USER=admin
+      - MARIADB_DATABASE=adminDB
+    networks:
+      - laravel-network
+
+  laravelServer:
+    image: docker.io/bitnami/laravel:9
+    ports:
+      - '82:8000'
+    environment:
+      - DB_HOST=laravelMariadb
+      - DB_PORT=3306
+      - DB_USERNAME=admin
+      - DB_DATABASE=adminDB
+    volumes:
+      - './htdoc:/app'
+    depends_on:
+      - laravelMariadb
+    networks:
+      - laravel-network
+
+# link : https://hub.docker.com/r/bitnami/laravel
+# docker-compose up

@@ -1,0 +1,16 @@
+- hosts: allubuntu #Nombre del grupo.
+  become: yes #Permite usar sudo. Solo funciona con -K ?
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+    - name: Upgrade packages
+      apt:
+        upgrade: yes
+
+# Execturar con el comando:
+# ansible-playbook -i ./ubuntu-playbooks/01-actualizar.ym
+# ansible-playbook ./ubuntu-playbooks/01-actualizar.yml -K
+
+# NOTA: el comando ansible solo funciona
+# si estas en el mismo folder que el archivo hosts

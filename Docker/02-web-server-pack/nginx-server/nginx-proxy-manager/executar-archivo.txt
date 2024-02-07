@@ -1,0 +1,39 @@
+--------------------------------
+cd ~/MyDockerFiles/nginx-proxy-manager
+docker compose up
+
+------------- nginx proxy web -------------------
+(El proxy manager se puede entrar desde la public ?)
+
+http://192.168.0.3:80 -> [web ?] <- port-domain ?
+http://192.168.0.3:81 -> web manager
+https://192.168.0.3:443 -> web manager ?
+
+default username: admin@example.com
+default password: changeme
+
+--------------------------------
+mail: pchan@vtuberapps.com
+fullname: pchan_cegepdefi
+nick: pchan
+pass: Spiceandwolf@!
+--------------------------------
+
+
+=========================
+# Cloudflare API token
+dns_cloudflare_api_token = YNYAoYmhnwjlq2RjTofnj7HDwZP-O3HtDoIf4Wre
+
+=========================
+35D2IIiOwamKJvAbsyqKd3QH1qJy-qtR6t53JNzX
+
+curl -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+     -H "Authorization: Bearer 35D2IIiOwamKJvAbsyqKd3QH1qJy-qtR6t53JNzX" \
+     -H "Content-Type:application/json"
+=========================
+YNYAoYmhnwjlq2RjTofnj7HDwZP-O3HtDoIf4Wre
+
+curl -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+     -H "Authorization: Bearer YNYAoYmhnwjlq2RjTofnj7HDwZP-O3HtDoIf4Wre" \
+     -H "Content-Type:application/json"
+=========================
