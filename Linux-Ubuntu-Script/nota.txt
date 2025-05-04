@@ -1,0 +1,6 @@
+
+# ====
+Script en Ubuntu-20.04 ya no funcionan en nuevas versiones.
+Por ejemplo "/etc/network/interfaces" ahora usa "netplan" y no "ifupdown"
+y "/etc/dhcp/dhcpd.conf" ahora usa "Kea" y no "isc-dhcp-server" osea que ya no usa "dhcpd".
+# ====
