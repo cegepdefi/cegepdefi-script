@@ -1,0 +1,94 @@
+# ubuntu 24.04 command line to setup static ip
+
+# install nmcli
+sudo apt install -y network-manager
+
+# Identify Your Network Interface
+nmcli d
+
+# Verificar si Netplan está instalado correctamente
+dpkg -l | grep netplan
+sudo apt install -y netplan.io
+
+
+
+# Edit the Netplan Configuration File: Netplan configuration files are stored in /etc/netplan/. You will find this file in the /etc/netplan directory.
+# It might be named 01-netcfg.yaml, 50-cloud-init.yaml, or something similar, depending on your setup. Open or create a file for editing.
+sudo rm /etc/netplan/01-netcfg.yaml
+sudo nano /etc/netplan/01-netcfg.yaml
+
+# Here’s an example configuration to set a static IP address "IMPORTANTE el documento debe de iniciar con ---":
+#---
+---
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: true
+    eth1:
+      dhcp4: false
+      addresses:
+        - 192.168.1.1/24
+      nameservers:
+        addresses: [1.1.1.1]
+#---
+# Replace eth0 adn eth1 with your interface name.
+# Adjust the IP address, subnet mask, default gateway, and DNS servers as necessary for your network.
+
+
+
+# --- Verificar si archivo tiene error ---
+# Si yamllint no está instalado, primero instálalo:
+sudo apt install -y yamllint
+
+# Si hay errores de formato YAML, Netplan fallará. Puedes validar el formato con:
+sudo yamllint /etc/netplan/01-netcfg.yaml
+# ----------------------------------------
+
+
+
+# Secure Configuration File Permissions: It’s crucial to ensure that the Netplan configuration file permissions are secure to prevent unauthorized access.
+# This command sets the file permissions so that only the root user can read and write to the file.
+sudo chmod 600 /etc/netplan/01-netcfg.yaml
+sudo chmod 644 /etc/netplan/01-netcfg.yaml
+
+#
+sudo netplan try
+sudo journalctl -xe | grep netplan
+
+# Regenerate and apply Netplan Once the file is correctly formatted, apply the configuration:
+# Forzar regeneración de Netplan
+# Si el archivo es correcto pero Netplan no aplica los cambios, intenta regenerar la configuración manualmente:
+sudo netplan generate
+
+# Aplicar la configuración manualmente
+# Si Netplan sigue sin aplicar los cambios, intenta hacerlo de forma manual en lugar de netplan apply:
+sudo systemctl restart systemd-networkd
+
+# Apply the Configuration Changes: Once you’ve edited the configuration file, apply the changes to update your network settings.
+# This command activates the new network configuration. If there are no errors, your system will start using the static IP address you’ve configured.
+# --- Esto da ERROR...
+sudo netplan apply
+
+
+
+# ---------
+# Si no está disponible, reinstala el paquete relacionado:
+sudo apt install -y udev
+
+# Verificar si udevadm está presente
+# Netplan parece estar fallando al ejecutar udevadm. Confirma si está instalado con:
+which udevadm
+
+# reinicia
+sudo reboot
+# ---------
+
+
+
+# ---------
+# Verify the New Static IP Address: To confirm that the static IP address has been successfully assigned to your network interface, use the ip a command.
+# This command displays all network interfaces and their configuration details.
+# Locate your configured interface (e.g., enp0s3) in the output to verify the new static IP address is correctly assigned.
+ip a

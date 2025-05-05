@@ -1,0 +1,325 @@
+# How to Install ISC-Kea DHCP Server on Ubuntu 24.04 Linux
+
+
+
+# --- Configurar ROUTE ---
+# es importante para que el HOST
+# no intente usar la carta de red "eth1=LAN" que no tiene internet para usar comandos como "update"
+# ROUTE deberia de ser solo "eth0=WAN" que si tiene internet.
+sudo ip route show
+
+# Debe mostrar algo similar a:
+## default via 192.168.X.1 dev eth0 proto dhcp
+## 192.168.X.0/24 dev eth0 proto kernel scope link
+## 192.168.Y.0/24 dev eth1 proto kernel scope link
+
+# Si eth1 tiene una ruta que no debería estar ahí, debes corregirla.
+# Establecer la puerta de enlace solo en eth0
+# Edita el archivo de configuración de Netplan:
+sudo nano /etc/netplan/01-netcfg.yaml
+
+# Configura solo eth0 con puerta de enlace:
+# --
+---
+network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp4: true
+      gateway4: 10.90.90.1  # Reemplaza con la puerta de enlace real
+    eth1:
+      dhcp4: false
+# --
+
+# aplica los cambios
+sudo netplan apply
+
+# ----->>>> Eliminar rutas incorrectas "Solo con este comando ya funciona bien".
+# Si apt update sigue fallando, verifica si hay rutas problemáticas:
+sudo ip route del default dev eth1
+
+# Establecer prioridad de interfaz
+# Si tienes eth0 y eth1 y Ubuntu no maneja correctamente la prioridad, puedes darle preferencia manualmente:
+sudo ip route add default via 10.90.90.1 dev eth0 metric 100
+sudo ip route add default via 192.168.Y.1 dev eth1 metric 200
+
+# Un valor de métrica más bajo indica prioridad más alta.
+# Para hacerlo persistente, usa netplan o agrega las rutas en /etc/network/interfaces si tienes ifupdown.
+
+# Verificar y probar
+# Después de aplicar cambios, prueba:
+ping -c 4 8.8.8.8
+sudo apt update
+
+# Si apt update aún intenta usar eth1, revisa los logs de red:
+journalctl -xe | grep network
+
+# reinicia
+sudo reboot
+# ---------------------------
+
+
+
+
+# update :
+sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt clean
+
+# install :
+sudo apt install -y curl apt-transport-https
+
+
+
+# --- Add ISC KEA Repository ---
+curl -1sLf 'https://dl.cloudsmith.io/public/isc/kea-2-6/setup.deb.sh' | sudo -E bash 
+
+# After adding the repository, once run the system update command:
+sudo apt update
+
+
+
+# --- Installing KEA DHCP on Ubuntu 24.04 ---
+sudo apt install -y isc-kea
+
+# Check the Version and Service Status
+# After completing the installation successfully, let’s check what version of KEA DHCP is on our system.
+kea-dhcp4 -version
+
+# To check the service and confirm it is running without any error use:
+# For DHCP 4:
+sudo systemctl status isc-kea-dhcp4-server
+# For DHCP 6:
+sudo systemctl status isc-kea-dhcp6-server
+
+
+
+# --- enable the service: ---
+# Enable the DHCPv4 service to start on boot:
+sudo systemctl enable isc-kea-dhcp4-server
+
+# Enable the DHCPv6 service to start on boot:
+sudo systemctl enable isc-kea-dhcp6-server
+
+
+
+# --- To Monitor Kea Logs ---
+# Kea logs provide valuable information for troubleshooting and monitoring server activity. You can view the logs using the journalctl command:
+
+# View logs for the DHCPv4 server:
+sudo journalctl -u isc-kea-dhcp4-server
+
+# View logs for the DHCPv6 server:
+sudo journalctl -u isc-kea-dhcp6-server
+
+
+# --- Example ---
+# Example- Basic Configuration for Kea DHCP4
+# Before performing any changes to the DHCP configuration file of KEA, let’s take the backup of its original file:
+sudo mv /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf.bak
+
+# Now, create the configuration file in your preferred text editor:
+sudo nano /etc/kea/kea-dhcp4.conf
+
+# Past the following basic and typical configuration setup:
+# To save and close the file (Ctrl + O to write and Ctrl + X to exit in nano.
+
+# ----
+{
+    "Dhcp4": {
+        "interfaces-config": {
+            "interfaces": ["eth1"]
+        },
+        "lease-database": {
+            "type": "memfile",
+            "persist": true,
+            "name": "/var/lib/kea/kea-leases4.csv"
+        },
+        "subnet4": [
+            {
+                "id": 1,
+                "subnet": "192.168.1.0/24",
+                "pools": [
+                    {
+                        "pool": "192.168.1.100 - 192.168.1.200"
+                    }
+                ],
+                "option-data": [
+                    {
+                        "name": "routers",
+                        "data": "192.168.1.1"
+                    },
+                    {
+                        "name": "domain-name-servers",
+                        "data": "1.1.1.1"
+                    },
+                    {
+                        "name": "domain-name",
+                        "data": "example.com"
+                    }
+                ]
+            }
+        ],
+        "valid-lifetime": 3600,
+        "renew-timer": 900,
+        "rebind-timer": 1800
+    }
+}
+#----
+
+
+
+
+Explanation of the above Configuration file elements:
+interfaces-config: Specifies the network interfaces that the DHCP server will listen on. Replace "eth0" with your network interface name. You can find your network interface using ip a command if you are unsure.
+lease-database: This will configure the database file where DHCP leases will be stored. The memfile type means leases are stored in a CSV file on disk (/var/lib/kea/kea-leases4.csv).
+subnet4: Defines the subnets and address pools that the DHCP server will manage:
+subnet: Specifies the subnet in CIDR notation (e.g. 192.168.1.0/24).
+pools: Defines the range of IP addresses within the subnet that can be assigned to clients (192.168.1.100 - 192.168.1.200 in this example).
+option-data: Specifies various DHCP options provided to clients:
+routers: The default gateway for clients.
+domain-name-servers: The DNS servers clients should use.
+domain-name: The domain name suffix for clients.
+valid-lifetime: The duration (in seconds) for which an IP address is valid (e.g., 3600 seconds or 1 hour).
+renew-timer: Time (in seconds) after which a client should begin to attempt to renew its lease (e.g., 900 seconds or 15 minutes).
+rebind-timer: Time (in seconds) after which a client should attempt to rebind to any available server if it hasn’t been able to renew its lease (e.g., 1800 seconds or 30 minutes).
+
+
+Let’s validate the configuration file for syntax errors after that we will restart the Kea Service.
+sudo kea-dhcp4 -t /etc/kea/kea-dhcp4.conf
+
+# Restart the Kea DHCP4 Service: Apply the new configuration by restarting the Kea DHCP4 service:
+sudo systemctl restart isc-kea-dhcp4-server.service
+
+# Check the Service Status: Ensure that the Kea DHCP4 service is running correctly:
+sudo systemctl status isc-kea-dhcp4-server.service
+
+
+
+
+# --- [ Para que los clientes tengan internet ] ---
+# Verificar la configuración de IP forwarding
+# Ubuntu debe permitir el reenvío de paquetes para que los clientes en eth1 puedan acceder a Internet a través de eth0. Activa el reenvío de IP con:
+sudo sysctl -w net.ipv4.ip_forward=1
+
+# Para que el cambio sea persistente, edita /etc/sysctl.conf:
+sudo nano /etc/sysctl.conf
+
+# Asegúrate de que esta línea esté presente (o agrégala si falta):
+net.ipv4.ip_forward=1
+
+# Guarda el archivo (Ctrl + X, Y, Enter) y aplica los cambios:
+sudo sysctl -p
+
+
+# --- Configurar NAT con iptables ---
+# Necesitamos configurar NAT en eth0 para que los clientes de eth1 puedan comunicarse con Internet. Ejecuta:
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
+sudo iptables -A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+
+# Para que los cambios persistan después de reiniciar, instala el servicio iptables-persistent:
+sudo apt install iptables-persistent -y
+
+# Luego guarda las reglas actuales:
+sudo netfilter-persistent save
+
+
+# Asegurar la configuración correcta en Kea DHCP
+# Los clientes deben recibir la puerta de enlace correcta en la configuración de DHCP. Edita el archivo de Kea:
+sudo nano /etc/kea/kea-dhcp4.conf
+
+# Revisa la configuración y asegúrate de que routers esté configurado con la IP de eth1:
+# --
+"option-data": [
+  {"name": "routers", "data": "192.168.1.1"},
+  {"name": "domain-name-servers", "data": "1.1.1.1"}
+]
+# --
+
+# Guarda los cambios y reinicia el servicio:
+sudo systemctl restart isc-kea-dhcp4-server
+
+# Verificar si los clientes obtienen la IP y la puerta de enlace
+# En una máquina cliente conectada a eth1, verifica qué IP recibió con:
+ip a
+
+# Revisa la puerta de enlace con:
+sudo ip route show
+
+
+# You need to specify that packets from eth1 should be translated by MASQUERADE. Run:
+# This ensures packets from the LAN network (192.168.1.0/24) get translated through eth0 to access the internet.
+sudo iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE  # Delete previous incorrect rule
+sudo iptables -t nat -A POSTROUTING -s 192.168.1.0/24 -o eth0 -j MASQUERADE
+
+# Ensure forwarding rules allow traffic
+# Add explicit FORWARD rules:
+# These rules allow forwarding between eth1 (LAN) and eth0 (WAN).
+sudo iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
+sudo iptables -A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+# Make the changes permanent
+# After verifying connectivity, save the rules to persist after reboot:
+sudo netfilter-persistent save
+
+
+# en el cliente Windows
+## ipconfig /all
+## ipconfig /release
+## ipconfig /renew
+
+
+# IMPORTANTE
+# el default debe de ser SOLO eth0
+# ejemplo correcto: default via 10.90.90.1 dev eth0 proto dhcp src 10.90.90.240 metric 100
+
+# y no estos DOS...
+# default via 192.168.1.1 dev eth1 proto static 
+# default via 10.90.90.1 dev eth0 proto dhcp src 10.90.90.240 metric 100 
+
+# IMPORTANTE
+# para arreglarlo
+sudo ip route del default dev eth1
+
+
+# IMPORTANTE el comando no es permanente, necesitas otro comando para que sea permante.
+# Para hacer que el comando sudo ip route del default dev eth1 sea permanente,
+# necesitas asegurarte de que la configuración de red de Ubuntu 24.04
+# no agregue automáticamente la ruta por defecto en eth1 al reiniciar. Aquí tienes varias soluciones:
+
+# Editar la configuración de Netplan
+# Netplan puede estar agregando la ruta por defecto en eth1. Abre el archivo de configuración de Netplan:
+sudo nano /etc/netplan/01-netcfg.yaml
+
+#----- >>>>> IMPORTANTE
+# El archivo NO debe de contener en eth1:
+# --
+routes:
+    - 192.168.1.1/24
+# --
+
+# Busca la sección de eth1 y asegúrate de eliminar la parte de routes. Tu configuración debe quedar así:
+# ---
+---
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: true
+    eth1:
+      dhcp4: false
+      addresses:
+        - 192.168.1.1/24
+      nameservers:
+        addresses: [1.1.1.1]
+# ---
+
+# Guardar los cambios
+sudo netplan apply
+
+# reiniciar
+reboot
+
+# Verificar de nuevo que la IP de eth1 no este en default y solo que si este eth0:
+sudo ip route show

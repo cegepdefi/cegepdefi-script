@@ -1,19 +1,5 @@
 #!/bin/bash
 #=========== [ Couleur  ON]=======
-#Black        0;30     Dark Gray     1;30
-#Red          0;31     Light Red     1;31
-#Green        0;32     Light Green   1;32
-#Brown/Orange 0;33     Yellow        1;33
-#Blue         0;34     Light Blue    1;34
-#Purple       0;35     Light Purple  1;35
-#Cyan         0;36     Light Cyan    1;36
-#Light Gray   0;37     White         1;3
-#=========== [ Couleur  OFF]=======
-#=========== [ Couleur Example  ON]=======
-#RED='\033[0;31m' #Color Rouge
-#NC='\033[0m' #No Color
-#echo -e "${RED} Salut ${NC}" #afficher text avec couleur
-#=========== [ Couleur Example  OFF]=======
 RED='\033[0;31m' #Color Rouge
 Orange='\033[0;33m' #Color Orange
 Green='\033[1;32m' #Color Verde
@@ -21,6 +7,8 @@ Blue='\033[1;34m' #Color Blue
 Purple='\035[1;34m' #Color Purple
 Gray='\033[1;36m' #Color Gray
 NC='\033[0m' #No Color
+#=========== [ Couleur  OFF]=======
+
 
 echo -e "${Orange}";
 echo -e "############################################################";
@@ -30,12 +18,13 @@ echo -e "${NC}";
 
 clean="clean";
 Quiter="Exit and clean";
-a1="01-install.sh";
+a1="create user with sudo";
+a2="01-install.sh";
 
 
 PS3="#======= Entrer option #======= :" # this displays the common prompt
 
-options=("${clean}" "${Quiter}" "${a1}");
+options=("${clean}" "${Quiter}" "${a1}" "${a2}");
 
 COLUMNS=12;
 select opt in "${options[@]}"
@@ -61,6 +50,22 @@ do
             fi
         ;;
         "${a1}")
+            echo -e "${Blue}--> Enter the new username: ${NC}";
+            read -p "" prompt
+            if [[ $prompt == "" ]]
+            then
+                clear;
+                echo -e "${Orange}--> ERROR: username is empty ${NC}";
+                break
+            else
+                echo -e "${Blue}--> adduser $prompt ${NC}";
+                adduser $prompt;
+                echo -e "${Blue}--> usermod -aG sudo $prompt ${NC}";
+                usermod -aG sudo $prompt;
+            fi
+            echo -e "${Green}--> END ${NC}";
+        ;;
+        "${a2}")
             echo -e "${Blue}--> bash ./01-install.sh ${NC}";
             exec bash ./01-install.sh;
             echo -e "${Green}--> END ${NC}";

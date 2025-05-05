@@ -1,19 +1,5 @@
 #!/bin/bash
 #=========== [ Couleur  ON]=======
-#Black        0;30     Dark Gray     1;30
-#Red          0;31     Light Red     1;31
-#Green        0;32     Light Green   1;32
-#Brown/Orange 0;33     Yellow        1;33
-#Blue         0;34     Light Blue    1;34
-#Purple       0;35     Light Purple  1;35
-#Cyan         0;36     Light Cyan    1;36
-#Light Gray   0;37     White         1;3
-#=========== [ Couleur  OFF]=======
-#=========== [ Couleur Example  ON]=======
-#RED='\033[0;31m' #Color Rouge
-#NC='\033[0m' #No Color
-#echo -e "${RED} Salut ${NC}" #afficher text avec couleur
-#=========== [ Couleur Example  OFF]=======
 RED='\033[0;31m' #Color Rouge
 Orange='\033[0;33m' #Color Orange
 Green='\033[1;32m' #Color Verde
@@ -21,6 +7,8 @@ Blue='\033[1;34m' #Color Blue
 Purple='\035[1;34m' #Color Purple
 Gray='\033[1;36m' #Color Gray
 NC='\033[0m' #No Color
+#=========== [ Couleur  OFF]=======
+
 
 echo -e "${Orange}";
 echo -e "############################################################";
@@ -32,11 +20,12 @@ MainMenu="Main Menu";
 clean="clean";
 Quiter="Exit and clean";
 a1="DHCP Server";
+a2="Code Server";
 
 
 PS3="#======= Entrer option #======= :" # this displays the common prompt
 
-options=("${MainMenu}" "${clean}" "${Quiter}" "${a1}");
+options=("${MainMenu}" "${clean}" "${Quiter}" "${a1}" "${a2}");
 
 COLUMNS=12;
 select opt in "${options[@]}"
@@ -67,8 +56,13 @@ do
             fi
         ;;
         "${a1}")
-            echo -e "${Blue}--> bash ./dhcp-server/01-dhcp-server.sh ${NC}";
-            exec bash ./dhcp-server/01-dhcp-server.sh;
+            echo -e "${Blue}--> bash ./dhcp-server/dhcp-server.sh ${NC}";
+            exec bash ./dhcp-server/dhcp-server.sh;
+            echo -e "${Green}--> END ${NC}";
+        ;;
+        "${a2}")
+            echo -e "${Blue}--> bash ./code-server/code-server.sh ${NC}";
+            exec bash ./code-servercode-server.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         *) echo "invalid option $REPLY";;
