@@ -38,8 +38,8 @@ function f_tuto_link_vs() {
 -----------------------------------------------------
 Link install : https://www.digitalocean.com/community/tutorials/how-to-set-up-the-code-server-cloud-ide-platform-on-ubuntu-22-04
 
-* wget https://github.com/coder/code-server/releases/download/v4.99.4/code-server_4.99.4_amd64.deb
-* sudo dpkg -i code-server_4.99.4_amd64.deb
+* wget https://github.com/coder/code-server/releases/download/v4.8.2/code-server-4.8.2-linux-amd64.tar.gz
+* sudo tar -xzvf code-server-4.8.2-linux-amd64.tar.gz
 
 -----------------------------------------------------
 * Importante poner la ip y el password en el archivo:
@@ -75,14 +75,14 @@ function f_install_vs() {
     # Convertir la respuesta a minúsculas
     respuesta=$(echo "$respuesta" | tr '[:upper:]' '[:lower:]')
     if [ "$respuesta" = "y" ]; then
-        echo -e "${Gray}[COMMAND] wget https://github.com/coder/code-server/releases/download/v4.99.4/code-server_4.99.4_amd64.deb ${NC}"
-        wget https://github.com/coder/code-server/releases/download/v4.99.4/code-server_4.99.4_amd64.deb
+        echo -e "${Gray}[COMMAND] wget https://github.com/coder/code-server/releases/download/v4.8.2/code-server-4.8.2-linux-amd64.tar.gz ${NC}"
+        wget https://github.com/coder/code-server/releases/download/v4.8.2/code-server-4.8.2-linux-amd64.tar.gz
 
-        echo -e "${Gray}[COMMAND] sudo dpkg -i code-server_4.99.4_amd64.deb ${NC}"
-        sudo dpkg -i code-server_4.99.4_amd64.deb
+        echo -e "${Gray}[COMMAND] sudo tar -xzvf code-server-4.8.2-linux-amd64.tar.gz ${NC}"
+        sudo tar -xzvf code-server-4.8.2-linux-amd64.tar.gz
 
-        echo -e "${Gray}[COMMAND] rm code-server_4.99.4_amd64.deb ${NC}"
-        rm code-server_4.99.4_amd64.deb
+        echo -e "${Gray}[COMMAND] rm code-server-4.8.2-linux-amd64.tar.gz ${NC}"
+        rm code-server-4.8.2-linux-amd64.tar.gz
 
         echo -e "${Gray}[*copying*] Copy conf to /lib/systemd/system/code-server.service ${NC}"
         cat <<EOF | sudo tee /lib/systemd/system/code-server.service >/dev/null
