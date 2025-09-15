@@ -22,27 +22,25 @@ Purple='\035[1;34m' #Color Purple
 Gray='\033[1;36m' #Color Gray
 NC='\033[0m' #No Color
 
-echo -e "${Blue}";
+echo -e "${RED}";
 echo -e "############################################################";
-echo -e "#                    SSH Commands Script                   #";
+echo -e "#                     Network Commands Script              #";
 echo -e "############################################################";
 echo -e "${NC}";
 
 MainMenu="Main Menu";
 nettoy="Nettoyer";
 Quiter="Quit et clear";
-a1="status ssh";
-a2="restart ssh";
-a3="start ssh";
-a4="stop ssh";
-a5="enable ssh";
-a6="disable ssh";
+a1="status networking";
+a2="restart networking";
+a3="start networking";
+a4="stop networking";
 
 #echo -e "${Blue} Entrer numero option :${NC}";
 
 PS3="#======= Entrer numero option #======= :" # this displays the common prompt
 
-options=("${MainMenu}" "${nettoy}" "${Quiter}" "${a1}" "${a2}" "${a3}" "${a4}" "${a5}" "${a6}")
+options=("${MainMenu}" "${nettoy}" "${Quiter}" "${a1}" "${a2}" "${a3}" "${a4}")
 
 COLUMNS=12
 select opt in "${options[@]}"
@@ -74,27 +72,19 @@ do
         ;;
         "${a1}")
             echo -e "${Blue}--> systemctl status networking ${NC}";
-            sudo -u root systemctl --no-pager status ssh ;
+            sudo -u root systemctl --no-pager status networking ;
         ;;
         "${a2}")
             echo -e "${Blue}--> systemctl restart networking ${NC}";
-            sudo -u root systemctl restart ssh ;
+            sudo -u root systemctl restart networking ;
         ;;
         "${a3}")
             echo -e "${Blue}--> systemctl start networking ${NC}";
-            sudo -u root systemctl start ssh ;
+            sudo -u root systemctl start networking ;
         ;;
         "${a4}")
             echo -e "${Blue}--> systemctl stop networking ${NC}";
-            sudo -u root systemctl stop ssh ;
-        ;;
-        "${a5}")
-            echo -e "${Blue}--> systemctl enable networking ${NC}";
-            sudo -u root systemctl enable ssh ;
-        ;;
-        "${a6}")
-            echo -e "${Blue}--> systemctl disable networking ${NC}";
-            sudo -u root systemctl disable ssh ;
+            sudo -u root systemctl stop networking ;
         ;;
         *) echo "invalid option $REPLY";;
     esac

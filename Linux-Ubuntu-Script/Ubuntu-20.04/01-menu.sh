@@ -28,36 +28,31 @@ echo -e "#                     Main Script                          #";
 echo -e "############################################################";
 echo -e "${NC}";
 
-nettoy="Nettoyer";
-Quiter="Quit et clear";
-a1="02-BasicCommand.sh";
-a2="03-net.sh";
-a3="04-ssh.sh";
-a4="05-install.sh";
-firewall="06-fire-wall.sh";
-samba="07-samba.sh";
-wakeonlan="08-wakeonlan.sh";
-
-#echo -e "${Blue} Entrer numero option :${NC}";
+clear="Clear";
+Exit="Exit and clear";
+a1="Basic";
+a2="Network";
+a3="Server";
+a4="Software";
 
 PS3="#======= Entrer numero option #======= :" # this displays the common prompt
 
-options=("${nettoy}" "${Quiter}" "${a1}" "${a2}" "${a3}" "${a4}" "${firewall}" "${samba}" "${wakeonlan}");
+options=("${clear}" "${Exit}" "${a1}" "${a2}" "${a3}" "${a4}");
 
 COLUMNS=12;
 select opt in "${options[@]}"
 do
     case $opt in
-        "${nettoy}")
-            echo -e "${Blue}--> nettoyer ${NC}";
+        "${clear}")
+            echo -e "${Blue}--> clearer ${NC}";
             clear;
             PS3="" # this hides the prompt
             COLUMNS=12;
             echo asdf | select foo in "${options[@]}"; do break; done # dummy select
             PS3="#======= Entrer numero option #======= : " # this displays the common prompt
         ;;
-        "${Quiter}")
-            echo -e "${Blue}--> Nettoyer ? Y / N ${NC}";
+        "${Exit}")
+            echo -e "${Blue}--> clearer ? Y / N ${NC}";
             read -p "" prompt
             if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
             then
@@ -68,38 +63,23 @@ do
             fi
         ;;
         "${a1}")
-            echo -e "${Blue}--> bash ./02-BasicCommand.sh ${NC}";
-            exec bash ./02-BasicCommand.sh;
+            echo -e "${Blue}--> bash ./Basic/01-Basic-menu.sh ${NC}";
+            exec bash ./Basic/01-Basic-menu.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         "${a2}")
-            echo -e "${Blue}--> bash ./03-net.sh ${NC}";
-            exec bash ./03-net.sh;
+            echo -e "${Blue}--> bash ./Network/01-Network-menu.sh ${NC}";
+            exec bash ./Network/01-Network-menu.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         "${a3}")
-            echo -e "${Blue}--> bash ./04-ssh.sh ${NC}";
-            exec bash ./04-ssh.sh;
+            echo -e "${Blue}--> bash ./Server/01-Server-menu.sh ${NC}";
+            exec bash ./Server/01-Server-menu.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         "${a4}")
-            echo -e "${Blue}--> bash ./05-install.sh ${NC}";
-            exec bash ./05-install.sh;
-            echo -e "${Green}--> END ${NC}";
-        ;;
-        "${firewall}")
-            echo -e "${Blue}--> 06-fire-wall.sh ${NC}";
-            exec bash ./06-fire-wall.sh;
-            echo -e "${Green}--> END ${NC}";
-        ;;
-        "${samba}")
-            echo -e "${Blue}--> 07-samba.sh ${NC}";
-            exec bash ./07-samba.sh;
-            echo -e "${Green}--> END ${NC}";
-        ;;
-        "${wakeonlan}")
-            echo -e "${Blue}--> 08-wakeonlan.sh ${NC}";
-            exec bash ./08-wakeonlan.sh;
+            echo -e "${Blue}--> bash ./Software/01-Software-menu.sh ${NC}";
+            exec bash ./Software/01-Software-menu.sh;
             echo -e "${Green}--> END ${NC}";
         ;;
         *) echo "invalid option $REPLY";;
