@@ -158,7 +158,7 @@ blkid
 ------------------
 # NOTA : UUI de:
 -HitachiHDD500
-/dev/sdb1: UUID="a9d07034-bd09-4117-9e4a-9517f52d512d" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="6ba2f492-01"
+/dev/sdb1: UUID="00000000-0000-0000-0000-0000000000" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="6ba2f492-01"
 ------------------
 
 # make a mount point under /mnt directory
@@ -171,7 +171,7 @@ nano /etc/fstab
 UUID=<uuid-of-your-drive>  <mount-point>  <file-system-type>  <mount-option>  <dump>  <pass>
 
 # ejemplo :
-UUID=a9d07034-bd09-4117-9e4a-9517f52d512d  /media/HitachiHDD500  ext4  defaults  0  2
+UUID=00000000-0000-0000-0000-0000000000  /media/HitachiHDD500  ext4  defaults  0  2
 
 
 # Save and close the file.
@@ -314,7 +314,7 @@ lspci -n -s 01:00
 # 01:00.3 0c80: a12:b12d (rev a1)
 
 # Para GTX 1660
-echo "options vfio-pci ids=a12:b12,a12:b12b,a12:b12c,a12:b12d disable_vga=1"> /etc/modprobe.d/vfio.conf
+echo "options vfio-pci ids=a12:b12,000:000,000:000,a12:b12d disable_vga=1"> /etc/modprobe.d/vfio.conf
 
 update-initramfs -u
 reset
@@ -329,7 +329,7 @@ nano /etc/default/grub
 GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
 ----
 
-echo "options vfio-pci ids=a12:b12b,a12:b12c disable_vga=1"> /etc/modprobe.d/vfio.conf
+echo "options vfio-pci ids=000:000,000:000 disable_vga=1"> /etc/modprobe.d/vfio.conf
 
 ============= i5 PCI [OFF] =====================
 
