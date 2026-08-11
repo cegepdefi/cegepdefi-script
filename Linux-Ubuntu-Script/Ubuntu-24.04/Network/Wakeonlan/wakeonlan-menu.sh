@@ -22,37 +22,41 @@ Purple='\035[1;34m' #Color Purple
 Gray='\033[1;36m' #Color Gray
 NC='\033[0m' #No Color
 
-echo -e "${Orange}";
-echo -e "############################################################";
-echo -e "#                     Main Script                          #";
-echo -e "############################################################";
-echo -e "${NC}";
+echo -e "${Blue}############################################################${NC}";
+echo -e "${Blue}#               ${RED}[root]${Blue} install packages Script             #${NC}";
+echo -e "${Blue}############################################################${NC}";
 
-clear="Clear";
-Exit="Exit and clear";
-a1="Basic";
-a2="Network";
-a3="Server";
-a4="Software";
+MainMenu="Main Menu";
+nettoy="Nettoyer";
+Quiter="Quit et clear";
+etherwake="Installer etherwake";
+wakeonlan="Install wakeonlan";
+
+#echo -e "${Blue} Entrer numero option :${NC}";
 
 PS3="#======= Entrer numero option #======= :" # this displays the common prompt
 
-options=("${clear}" "${Exit}" "${a1}" "${a2}" "${a3}" "${a4}");
+options=("${MainMenu}" "${nettoy}" "${Quiter}" "${etherwake}" "${wakeonlan}")
 
-COLUMNS=12;
+COLUMNS=12
 select opt in "${options[@]}"
 do
     case $opt in
-        "${clear}")
-            echo -e "${Blue}--> clearer ${NC}";
+        "${MainMenu}")
+            echo -e "${Blue}--> 01-menu.sh ${NC}";
+            exec sudo -u root bash ./01-menu.sh;
+            echo -e "${Green}--> END ${NC}";
+        ;;
+        "${nettoy}")
+            echo -e "${Blue}--> nettoyer ${NC}";
             clear;
             PS3="" # this hides the prompt
             COLUMNS=12;
             echo asdf | select foo in "${options[@]}"; do break; done # dummy select
             PS3="#======= Entrer numero option #======= : " # this displays the common prompt
         ;;
-        "${Exit}")
-            echo -e "${Blue}--> clearer ? Y / N ${NC}";
+        "${Quiter}")
+            echo -e "${Blue}--> Nettoyer ? Y / N ${NC}";
             read -p "" prompt
             if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
             then
@@ -62,27 +66,16 @@ do
                 break
             fi
         ;;
-        "${a1}")
-            echo -e "${Blue}--> bash ./Basic/01-Basic-menu.sh ${NC}";
-            exec bash ./Basic/01-Basic-menu.sh;
-            echo -e "${Green}--> END ${NC}";
+        "${etherwake}")
+            echo -e "${Blue}--> apt-get install -y etherwake ${NC}";
+            echo -e "${Blue}--> sudo etherwake <mac address> ${NC}";
+            apt-get install -y etherwake ;
         ;;
-        "${a2}")
-            echo -e "${Blue}--> bash ./Network/01-Network-menu.sh ${NC}";
-            exec bash ./Network/01-Network-menu.sh;
-            echo -e "${Green}--> END ${NC}";
-        ;;
-        "${a3}")
-            echo -e "${Blue}--> bash ./Server/01-Server-menu.sh ${NC}";
-            exec bash ./Server/01-Server-menu.sh;
-            echo -e "${Green}--> END ${NC}";
-        ;;
-        "${a4}")
-            echo -e "${Blue}--> bash ./Software/01-Software-menu.sh ${NC}";
-            exec bash ./Software/01-Software-menu.sh;
-            echo -e "${Green}--> END ${NC}";
+        "${wakeonlan}")
+            echo -e "${Blue}--> apt-get install -y wakeonlan ${NC}";
+            echo -e "${Blue}--> sudo wakeonlan <mac address> ${NC}";
+            apt-get install -y wakeonlan ;
         ;;
         *) echo "invalid option $REPLY";;
     esac
-    COLUMNS=12
 done

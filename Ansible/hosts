@@ -3,7 +3,7 @@
 
 [allalpine:vars]
 ansible_user=admin
-ansible_password=admin123
+ansible_password=admin123 # <---- OF course you must change this password. (-_-)
 
 # [allubuntu] : es el nombre del grupo
 [allubuntu]
@@ -14,4 +14,4 @@ ansible_password=admin123
 # nombre y pass de los dos servers??
 [allubuntu:vars]
 ansible_user=admin
-ansible_password=admin123
+ansible_password=admin123 # <---- OF course you must change this password. (-_-)

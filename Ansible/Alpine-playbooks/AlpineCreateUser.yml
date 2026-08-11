@@ -10,7 +10,7 @@
           - wheel
           - docker
         # Create user with a cleartext password if it does not exist or update its password.
-        password: admin123
+        password: admin123  # <---- OF course you must change this password. (-_-)
 
 # Execturar con el comando:
 # ansible-playbook ./Alpine-playbooks/Docker-install.yml -K

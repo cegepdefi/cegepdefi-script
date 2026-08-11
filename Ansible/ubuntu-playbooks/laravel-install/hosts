@@ -7,4 +7,4 @@
 # nombre y pass de los dos servers??
 [ctlaravel:vars]
 ansible_user=admin
-ansible_password=admin123
+ansible_password=admin123 # <---- OF course you must change this password. (-_-)
